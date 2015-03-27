@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.lawson.com/UserOperations/Delete" xmlns:tns="http://schemas.lawson.com/UserOperations" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns5="http://lawson.com/ws/transports/grid" xmlns:lws="http://lawson.com/ws/credentials" xmlns:ns4="http://schemas.lawson.com/UserOperations/Create" xmlns:ns1="http://schemas.lawson.com/UserOperations/Copy" xmlns:ns3="http://schemas.lawson.com/UserOperations/Change" name="UserOperationsService" targetNamespace="http://schemas.lawson.com/UserOperations" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns:copy="http://schemas.lawson.com/UserOperations/Copy" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/UserOperations/Copy">
+      <xsd:annotation>
+        <xsd:documentation>Program: MNS150</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="Copy" type="copy:CopyType" />
+      <xsd:complexType name="CopyType">
+        <xsd:sequence>
+          <xsd:element name="MNS150" type="copy:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="FromUser">
+            <xsd:annotation>
+              <xsd:documentation>User
+The field indicates the user who last affected this record.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Description" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Description
+The field indicates a description of the current identity.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="40" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Warehouse" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Warehouse
+The field indicates the warehouse that is automatically suggested on panels where warehouse should be entered.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="TelephoneNumber1" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Telephone number 1
+The field indicates the user's telephone number.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="16" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="MenuVersion" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Menu version
+The field indicates which menu tree is displayed when the user logs on. A menu version can only be connected to one menu. This field is only valid for Lawson Smart Office.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="ToUser">
+            <xsd:annotation>
+              <xsd:documentation>User
+The field indicates a unique identity of a user in the M3 system.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CopyResponse" type="copy:CopyResponseType" />
+      <xsd:complexType name="CopyResponseType">
+        <xsd:sequence>
+          <xsd:element name="MNS150" type="copy:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:delete="http://schemas.lawson.com/UserOperations/Delete" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/UserOperations/Delete">
+      <xsd:annotation>
+        <xsd:documentation>Program: MNS150</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="Delete" type="delete:DeleteType" />
+      <xsd:complexType name="DeleteType">
+        <xsd:sequence>
+          <xsd:element name="MNS150" type="delete:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="User">
+            <xsd:annotation>
+              <xsd:documentation>User
+The field indicates the user who last affected this record.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DeleteResponse" type="delete:DeleteResponseType" />
+      <xsd:complexType name="DeleteResponseType">
+        <xsd:sequence>
+          <xsd:element name="MNS150" type="delete:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:change="http://schemas.lawson.com/UserOperations/Change" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/UserOperations/Change">
+      <xsd:annotation>
+        <xsd:documentation>Program: MNS150</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="Change" type="change:ChangeType" />
+      <xsd:complexType name="ChangeType">
+        <xsd:sequence>
+          <xsd:element name="MNS150" type="change:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="User">
+            <xsd:annotation>
+              <xsd:documentation>User
+The field indicates the user who last affected this record.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Description" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Description
+The field indicates a description of the current identity.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="40" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Warehouse" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Warehouse
+The field indicates the warehouse that is automatically suggested on panels where warehouse should be entered.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="TelephoneNumber1" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Telephone number 1
+The field indicates the user's telephone number.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="16" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="MenuVersion" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Menu version
+The field indicates which menu tree is displayed when the user logs on. A menu version can only be connected to one menu. This field is only valid for Lawson Smart Office.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ChangeResponse" type="change:ChangeResponseType" />
+      <xsd:complexType name="ChangeResponseType">
+        <xsd:sequence>
+          <xsd:element name="MNS150" type="change:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:create="http://schemas.lawson.com/UserOperations/Create" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/UserOperations/Create">
+      <xsd:annotation>
+        <xsd:documentation>Program: MNS150</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="Create" type="create:CreateType" />
+      <xsd:complexType name="CreateType">
+        <xsd:sequence>
+          <xsd:element name="MNS150" type="create:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="User">
+            <xsd:annotation>
+              <xsd:documentation>User
+The field indicates the user who last affected this record.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Description">
+            <xsd:annotation>
+              <xsd:documentation>Description
+The field indicates a description of the current identity.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="40" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Warehouse" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Warehouse
+The field indicates the warehouse that is automatically suggested on panels where warehouse should be entered.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="TelephoneNumber1" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Telephone number 1
+The field indicates the user's telephone number.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="16" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="MenuVersion" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Menu version
+The field indicates which menu tree is displayed when the user logs on. A menu version can only be connected to one menu. This field is only valid for Lawson Smart Office.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CreateResponse" type="create:CreateResponseType" />
+      <xsd:complexType name="CreateResponseType">
+        <xsd:sequence>
+          <xsd:element name="MNS150" type="create:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://lawson.com/ws/credentials">
+      <xsd:element name="lws">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="user" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+            <xsd:element minOccurs="0" name="company" type="xsd:integer" />
+            <xsd:element minOccurs="0" name="division" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="Change">
+    <wsdl:part name="Change" element="ns3:Change" />
+  </wsdl:message>
+  <wsdl:message name="Create">
+    <wsdl:part name="Create" element="ns4:Create" />
+  </wsdl:message>
+  <wsdl:message name="CopyResponse">
+    <wsdl:part name="CopyResponse" element="ns1:CopyResponse" />
+  </wsdl:message>
+  <wsdl:message name="LwsHeader001">
+    <wsdl:part name="LwsHeader" element="lws:lws" />
+  </wsdl:message>
+  <wsdl:message name="ChangeResponse">
+    <wsdl:part name="ChangeResponse" element="ns3:ChangeResponse" />
+  </wsdl:message>
+  <wsdl:message name="Copy">
+    <wsdl:part name="Copy" element="ns1:Copy" />
+  </wsdl:message>
+  <wsdl:message name="DeleteResponse">
+    <wsdl:part name="DeleteResponse" element="ns2:DeleteResponse" />
+  </wsdl:message>
+  <wsdl:message name="Delete">
+    <wsdl:part name="Delete" element="ns2:Delete" />
+  </wsdl:message>
+  <wsdl:message name="CreateResponse">
+    <wsdl:part name="CreateResponse" element="ns4:CreateResponse" />
+  </wsdl:message>
+  <wsdl:portType name="UserOperations">
+    <wsdl:operation name="Copy">
+      <wsdl:input name="Copy" message="tns:Copy" />
+      <wsdl:output name="CopyResponse" message="tns:CopyResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="Delete">
+      <wsdl:input name="Delete" message="tns:Delete" />
+      <wsdl:output name="DeleteResponse" message="tns:DeleteResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="Change">
+      <wsdl:input name="Change" message="tns:Change" />
+      <wsdl:output name="ChangeResponse" message="tns:ChangeResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="Create">
+      <wsdl:input name="Create" message="tns:Create" />
+      <wsdl:output name="CreateResponse" message="tns:CreateResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UserOperationsServiceSoapBinding" type="tns:UserOperations">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Copy">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="Copy">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="CopyResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Delete">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="Delete">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="DeleteResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Change">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="Change">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ChangeResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Create">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="Create">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="CreateResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="UserOperationsService">
+    <wsdl:port name="UserOperationsPort" binding="tns:UserOperationsServiceSoapBinding">
+      <soap:address location="http://m3be.gunnersens.com.au:21007/mws-ws/services/UserOperations" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

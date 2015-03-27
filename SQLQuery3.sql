@@ -1,0 +1,1 @@
+﻿INSERT INTO InwardGoods(PONumber, LineNumber,SubLineNumber) Values ('1000009','10','0')

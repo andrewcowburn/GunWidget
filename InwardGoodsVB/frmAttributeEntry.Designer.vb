@@ -26,25 +26,28 @@ Partial Class frmAttributeEntry
         Me.btnConfirm = New System.Windows.Forms.Button()
         Me.cboSuppPacks = New System.Windows.Forms.ComboBox()
         Me.lblSuppPackNo = New System.Windows.Forms.Label()
-        Me.lblEnter = New System.Windows.Forms.Label()
         Me.lblProduct = New System.Windows.Forms.Label()
         Me.lblPacks = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblEnter = New System.Windows.Forms.Label()
+        Me.btnCancel = New System.Windows.Forms.Button()
         CType(Me.dgvAttributeEntry, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'dgvAttributeEntry
         '
         Me.dgvAttributeEntry.AllowUserToAddRows = False
+        Me.dgvAttributeEntry.AllowUserToDeleteRows = False
+        Me.dgvAttributeEntry.AllowUserToResizeColumns = False
+        Me.dgvAttributeEntry.AllowUserToResizeRows = False
         Me.dgvAttributeEntry.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvAttributeEntry.Location = New System.Drawing.Point(24, 146)
+        Me.dgvAttributeEntry.Location = New System.Drawing.Point(31, 115)
         Me.dgvAttributeEntry.Name = "dgvAttributeEntry"
         Me.dgvAttributeEntry.Size = New System.Drawing.Size(257, 503)
         Me.dgvAttributeEntry.TabIndex = 0
         '
         'btnConfirm
         '
-        Me.btnConfirm.Location = New System.Drawing.Point(24, 115)
+        Me.btnConfirm.Location = New System.Drawing.Point(210, 624)
         Me.btnConfirm.Name = "btnConfirm"
         Me.btnConfirm.Size = New System.Drawing.Size(78, 25)
         Me.btnConfirm.TabIndex = 1
@@ -54,7 +57,7 @@ Partial Class frmAttributeEntry
         'cboSuppPacks
         '
         Me.cboSuppPacks.FormattingEnabled = True
-        Me.cboSuppPacks.Location = New System.Drawing.Point(156, 88)
+        Me.cboSuppPacks.Location = New System.Drawing.Point(163, 83)
         Me.cboSuppPacks.Name = "cboSuppPacks"
         Me.cboSuppPacks.Size = New System.Drawing.Size(125, 21)
         Me.cboSuppPacks.TabIndex = 2
@@ -63,32 +66,23 @@ Partial Class frmAttributeEntry
         'lblSuppPackNo
         '
         Me.lblSuppPackNo.AutoSize = True
-        Me.lblSuppPackNo.Location = New System.Drawing.Point(21, 91)
+        Me.lblSuppPackNo.Location = New System.Drawing.Point(34, 86)
         Me.lblSuppPackNo.Name = "lblSuppPackNo"
         Me.lblSuppPackNo.Size = New System.Drawing.Size(116, 13)
         Me.lblSuppPackNo.TabIndex = 3
         Me.lblSuppPackNo.Text = "Supplier Pack Number "
         Me.lblSuppPackNo.Visible = False
         '
-        'lblEnter
-        '
-        Me.lblEnter.AutoSize = True
-        Me.lblEnter.Location = New System.Drawing.Point(21, 91)
-        Me.lblEnter.Name = "lblEnter"
-        Me.lblEnter.Size = New System.Drawing.Size(122, 13)
-        Me.lblEnter.TabIndex = 4
-        Me.lblEnter.Text = "Enter details of the pack"
-        Me.lblEnter.Visible = False
-        '
         'lblProduct
         '
         Me.lblProduct.AutoSize = True
         Me.lblProduct.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct.Location = New System.Drawing.Point(62, 20)
+        Me.lblProduct.Location = New System.Drawing.Point(12, 21)
         Me.lblProduct.Name = "lblProduct"
-        Me.lblProduct.Size = New System.Drawing.Size(178, 24)
+        Me.lblProduct.Size = New System.Drawing.Size(276, 24)
         Me.lblProduct.TabIndex = 5
-        Me.lblProduct.Text = "XXXXXXXXXXXX"
+        Me.lblProduct.Text = "XXXXXXXXXXXXXXXXXXX"
+        Me.lblProduct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblPacks
         '
@@ -100,21 +94,32 @@ Partial Class frmAttributeEntry
         Me.lblPacks.TabIndex = 6
         Me.lblPacks.Text = "xxxxxxxxxx"
         '
-        'Label1
+        'lblEnter
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(437, 352)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(39, 13)
-        Me.Label1.TabIndex = 7
-        Me.Label1.Text = "Label1"
+        Me.lblEnter.AutoSize = True
+        Me.lblEnter.Location = New System.Drawing.Point(30, 86)
+        Me.lblEnter.Name = "lblEnter"
+        Me.lblEnter.Size = New System.Drawing.Size(122, 13)
+        Me.lblEnter.TabIndex = 4
+        Me.lblEnter.Text = "Enter details of the pack"
+        Me.lblEnter.Visible = False
+        '
+        'btnCancel
+        '
+        Me.btnCancel.Location = New System.Drawing.Point(126, 624)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(78, 25)
+        Me.btnCancel.TabIndex = 7
+        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.UseVisualStyleBackColor = True
+        Me.btnCancel.Visible = False
         '
         'frmAttributeEntry
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(865, 672)
-        Me.Controls.Add(Me.Label1)
+        Me.ClientSize = New System.Drawing.Size(320, 658)
+        Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.lblPacks)
         Me.Controls.Add(Me.lblProduct)
         Me.Controls.Add(Me.lblEnter)
@@ -123,7 +128,6 @@ Partial Class frmAttributeEntry
         Me.Controls.Add(Me.btnConfirm)
         Me.Controls.Add(Me.dgvAttributeEntry)
         Me.Name = "frmAttributeEntry"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Attribute Entry"
         CType(Me.dgvAttributeEntry, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -134,8 +138,8 @@ Partial Class frmAttributeEntry
     Friend WithEvents btnConfirm As System.Windows.Forms.Button
     Friend WithEvents cboSuppPacks As System.Windows.Forms.ComboBox
     Friend WithEvents lblSuppPackNo As System.Windows.Forms.Label
-    Friend WithEvents lblEnter As System.Windows.Forms.Label
     Friend WithEvents lblProduct As System.Windows.Forms.Label
     Friend WithEvents lblPacks As System.Windows.Forms.Label
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents lblEnter As System.Windows.Forms.Label
+    Friend WithEvents btnCancel As System.Windows.Forms.Button
 End Class

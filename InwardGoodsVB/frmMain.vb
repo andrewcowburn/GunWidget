@@ -1,4 +1,5 @@
 ﻿Public Class frmMain
+
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         End
     End Sub
@@ -13,11 +14,21 @@
         tslUser.Text = modFunctions.GetActiveDirUserDetails(Environment.UserName)
     End Sub
 
-    Private Sub ProposeRecipetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ProposeRecipetToolStripMenuItem.Click
-        frmPost2M3.Show()
+    Private Sub ClosePurchaseOrderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClosePurchaseOrderToolStripMenuItem.Click
+        If ActiveMdiChild IsNot Nothing Then
+            ActiveMdiChild.Close()
+        End If
     End Sub
 
-    Private Sub TestToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestToolStripMenuItem.Click
-        frmTestWS.Show()
+    Private Sub frmMain_MdiChildActivate(sender As Object, e As EventArgs) Handles Me.MdiChildActivate
+        If ActiveMdiChild IsNot Nothing Then
+            If Me.ActiveMdiChild.Name = "frmPO" Then
+                ClosePurchaseOrderToolStripMenuItem.Enabled = True
+            Else
+                ClosePurchaseOrderToolStripMenuItem.Enabled = False
+            End If
+        Else
+            ClosePurchaseOrderToolStripMenuItem.Enabled = False
+        End If
     End Sub
 End Class

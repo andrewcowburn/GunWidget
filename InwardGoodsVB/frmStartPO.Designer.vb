@@ -27,7 +27,8 @@ Partial Class frmStartPO
         Me.txtPONumber = New System.Windows.Forms.TextBox()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.btnSubmit = New System.Windows.Forms.Button()
+        Me.btnCancel = New System.Windows.Forms.Button()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -44,7 +45,7 @@ Partial Class frmStartPO
         'txtPONumber
         '
         Me.txtPONumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPONumber.Location = New System.Drawing.Point(49, 59)
+        Me.txtPONumber.Location = New System.Drawing.Point(49, 62)
         Me.txtPONumber.Name = "txtPONumber"
         Me.txtPONumber.Size = New System.Drawing.Size(217, 44)
         Me.txtPONumber.TabIndex = 1
@@ -61,21 +62,31 @@ Partial Class frmStartPO
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(92, 22)
         Me.FileToolStripMenuItem.Text = "File"
         '
-        'TextBox1
+        'btnSubmit
         '
-        Me.TextBox1.BackColor = System.Drawing.SystemColors.Control
-        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.TextBox1.Location = New System.Drawing.Point(93, 128)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(100, 13)
-        Me.TextBox1.TabIndex = 4
+        Me.btnSubmit.Location = New System.Drawing.Point(77, 132)
+        Me.btnSubmit.Name = "btnSubmit"
+        Me.btnSubmit.Size = New System.Drawing.Size(75, 23)
+        Me.btnSubmit.TabIndex = 3
+        Me.btnSubmit.Text = "Submit"
+        Me.btnSubmit.UseVisualStyleBackColor = True
+        '
+        'btnCancel
+        '
+        Me.btnCancel.Location = New System.Drawing.Point(158, 132)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(75, 23)
+        Me.btnCancel.TabIndex = 4
+        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.UseVisualStyleBackColor = True
         '
         'frmStartPO
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(315, 129)
-        Me.Controls.Add(Me.TextBox1)
+        Me.ClientSize = New System.Drawing.Size(315, 167)
+        Me.Controls.Add(Me.btnCancel)
+        Me.Controls.Add(Me.btnSubmit)
         Me.Controls.Add(Me.txtPONumber)
         Me.Controls.Add(Me.Label1)
         Me.Name = "frmStartPO"
@@ -92,5 +103,6 @@ Partial Class frmStartPO
     Friend WithEvents txtPONumber As System.Windows.Forms.TextBox
     Friend WithEvents ContextMenuStrip1 As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents FileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents btnSubmit As System.Windows.Forms.Button
+    Friend WithEvents btnCancel As System.Windows.Forms.Button
 End Class

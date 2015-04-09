@@ -22,17 +22,18 @@ Partial Class frmPO
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblTitle = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblOne = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
+        Me.lblStatusText = New System.Windows.Forms.Label()
+        Me.lblTwo = New System.Windows.Forms.Label()
         Me.lblWarehouseID = New System.Windows.Forms.Label()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.lblCreditorID = New System.Windows.Forms.Label()
@@ -43,6 +44,7 @@ Partial Class frmPO
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbNewRun = New System.Windows.Forms.ToolStripButton()
+        Me.ttbuttons = New System.Windows.Forms.ToolTip(Me.components)
         CType(Me.dgvItems, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvRun, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
@@ -52,21 +54,21 @@ Partial Class frmPO
         '
         Me.lblTitle.AutoSize = True
         Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTitle.Location = New System.Drawing.Point(12, 25)
+        Me.lblTitle.Location = New System.Drawing.Point(12, 34)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(529, 31)
         Me.lblTitle.TabIndex = 0
         Me.lblTitle.Text = "Inward Good Processing for PO XXXXXXX"
         '
-        'Label1
+        'lblOne
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(15, 65)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(146, 13)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Purchase Order Number:"
+        Me.lblOne.AutoSize = True
+        Me.lblOne.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblOne.Location = New System.Drawing.Point(15, 74)
+        Me.lblOne.Name = "lblOne"
+        Me.lblOne.Size = New System.Drawing.Size(146, 13)
+        Me.lblOne.TabIndex = 1
+        Me.lblOne.Text = "Purchase Order Number:"
         '
         'Label2
         '
@@ -80,37 +82,37 @@ Partial Class frmPO
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(15, 146)
+        Me.Label4.Location = New System.Drawing.Point(15, 127)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(92, 13)
         Me.Label4.TabIndex = 4
         Me.Label4.Text = "Warehouse ID:"
         '
-        'Label5
+        'lblStatusText
         '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(15, 119)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(47, 13)
-        Me.Label5.TabIndex = 5
-        Me.Label5.Text = "Status:"
+        Me.lblStatusText.AutoSize = True
+        Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatusText.Location = New System.Drawing.Point(15, 155)
+        Me.lblStatusText.Name = "lblStatusText"
+        Me.lblStatusText.Size = New System.Drawing.Size(47, 13)
+        Me.lblStatusText.TabIndex = 5
+        Me.lblStatusText.Text = "Status:"
         '
-        'Label6
+        'lblTwo
         '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(15, 92)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(72, 13)
-        Me.Label6.TabIndex = 6
-        Me.Label6.Text = "Creditor ID:"
+        Me.lblTwo.AutoSize = True
+        Me.lblTwo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTwo.Location = New System.Drawing.Point(15, 101)
+        Me.lblTwo.Name = "lblTwo"
+        Me.lblTwo.Size = New System.Drawing.Size(72, 13)
+        Me.lblTwo.TabIndex = 6
+        Me.lblTwo.Text = "Creditor ID:"
         '
         'lblWarehouseID
         '
         Me.lblWarehouseID.AutoSize = True
         Me.lblWarehouseID.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWarehouseID.Location = New System.Drawing.Point(214, 146)
+        Me.lblWarehouseID.Location = New System.Drawing.Point(214, 127)
         Me.lblWarehouseID.Name = "lblWarehouseID"
         Me.lblWarehouseID.Size = New System.Drawing.Size(49, 13)
         Me.lblWarehouseID.TabIndex = 8
@@ -120,7 +122,7 @@ Partial Class frmPO
         '
         Me.lblStatus.AutoSize = True
         Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(214, 119)
+        Me.lblStatus.Location = New System.Drawing.Point(214, 155)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(49, 13)
         Me.lblStatus.TabIndex = 9
@@ -130,7 +132,7 @@ Partial Class frmPO
         '
         Me.lblCreditorID.AutoSize = True
         Me.lblCreditorID.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCreditorID.Location = New System.Drawing.Point(214, 92)
+        Me.lblCreditorID.Location = New System.Drawing.Point(214, 101)
         Me.lblCreditorID.Name = "lblCreditorID"
         Me.lblCreditorID.Size = New System.Drawing.Size(49, 13)
         Me.lblCreditorID.TabIndex = 11
@@ -140,7 +142,7 @@ Partial Class frmPO
         '
         Me.lblPO.AutoSize = True
         Me.lblPO.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblPO.Location = New System.Drawing.Point(214, 65)
+        Me.lblPO.Location = New System.Drawing.Point(214, 74)
         Me.lblPO.Name = "lblPO"
         Me.lblPO.Size = New System.Drawing.Size(56, 13)
         Me.lblPO.TabIndex = 12
@@ -150,23 +152,25 @@ Partial Class frmPO
         '
         Me.dgvItems.AllowUserToAddRows = False
         Me.dgvItems.AllowUserToDeleteRows = False
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItems.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle11
+        Me.dgvItems.AllowUserToResizeColumns = False
+        Me.dgvItems.AllowUserToResizeRows = False
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItems.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvItems.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvItems.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvItems.Location = New System.Drawing.Point(18, 197)
         Me.dgvItems.Name = "dgvItems"
         Me.dgvItems.Size = New System.Drawing.Size(933, 211)
@@ -186,34 +190,36 @@ Partial Class frmPO
         '
         Me.dgvRun.AllowUserToAddRows = False
         Me.dgvRun.AllowUserToDeleteRows = False
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvRun.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
+        Me.dgvRun.AllowUserToResizeColumns = False
+        Me.dgvRun.AllowUserToResizeRows = False
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvRun.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.dgvRun.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvRun.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvRun.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvRun.Location = New System.Drawing.Point(18, 448)
         Me.dgvRun.Name = "dgvRun"
         Me.dgvRun.ReadOnly = True
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvRun.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvRun.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.dgvRun.Size = New System.Drawing.Size(523, 211)
         Me.dgvRun.TabIndex = 16
         '
@@ -239,11 +245,12 @@ Partial Class frmPO
         'tsbNewRun
         '
         Me.tsbNewRun.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.tsbNewRun.Enabled = False
         Me.tsbNewRun.Image = Global.InwardGoodsVB.My.Resources.Resources._new
         Me.tsbNewRun.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbNewRun.Name = "tsbNewRun"
         Me.tsbNewRun.Size = New System.Drawing.Size(23, 22)
-        Me.tsbNewRun.Text = "New Run"
+        Me.tsbNewRun.Text = "New Run of Tally or Fixed Packs"
         '
         'frmPO
         '
@@ -251,6 +258,7 @@ Partial Class frmPO
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(1034, 730)
+        Me.ControlBox = False
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.dgvRun)
@@ -260,13 +268,14 @@ Partial Class frmPO
         Me.Controls.Add(Me.lblCreditorID)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.lblWarehouseID)
-        Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.lblTwo)
+        Me.Controls.Add(Me.lblStatusText)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.lblOne)
         Me.Controls.Add(Me.lblTitle)
         Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.KeyPreview = True
         Me.MaximumSize = New System.Drawing.Size(1050, 768)
         Me.Name = "frmPO"
         Me.ShowIcon = False
@@ -283,11 +292,11 @@ Partial Class frmPO
 
     End Sub
     Friend WithEvents lblTitle As System.Windows.Forms.Label
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents lblOne As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents lblStatusText As System.Windows.Forms.Label
+    Friend WithEvents lblTwo As System.Windows.Forms.Label
     Friend WithEvents lblWarehouseID As System.Windows.Forms.Label
     Friend WithEvents lblStatus As System.Windows.Forms.Label
     Friend WithEvents lblCreditorID As System.Windows.Forms.Label
@@ -298,4 +307,5 @@ Partial Class frmPO
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents tsbNewRun As System.Windows.Forms.ToolStripButton
+    Friend WithEvents ttbuttons As System.Windows.Forms.ToolTip
 End Class

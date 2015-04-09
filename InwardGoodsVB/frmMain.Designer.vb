@@ -25,11 +25,10 @@ Partial Class frmMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ClosePurchaseOrderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NewRecieptToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ProposeRecipetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TestToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
         Me.tslUser = New System.Windows.Forms.ToolStripStatusLabel()
@@ -48,20 +47,27 @@ Partial Class frmMain
         '
         'FileToolStripMenuItem1
         '
-        Me.FileToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExitToolStripMenuItem})
+        Me.FileToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ClosePurchaseOrderToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem1.Name = "FileToolStripMenuItem1"
         Me.FileToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem1.Text = "File"
         '
+        'ClosePurchaseOrderToolStripMenuItem
+        '
+        Me.ClosePurchaseOrderToolStripMenuItem.Enabled = False
+        Me.ClosePurchaseOrderToolStripMenuItem.Name = "ClosePurchaseOrderToolStripMenuItem"
+        Me.ClosePurchaseOrderToolStripMenuItem.Size = New System.Drawing.Size(187, 22)
+        Me.ClosePurchaseOrderToolStripMenuItem.Text = "Close Purchase Order"
+        '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(92, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(187, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewRecieptToolStripMenuItem, Me.ProposeRecipetToolStripMenuItem, Me.TestToolStripMenuItem})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewRecieptToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(58, 20)
         Me.FileToolStripMenuItem.Text = "Receipt"
@@ -71,18 +77,6 @@ Partial Class frmMain
         Me.NewRecieptToolStripMenuItem.Name = "NewRecieptToolStripMenuItem"
         Me.NewRecieptToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.NewRecieptToolStripMenuItem.Text = "New / Edit Recipt..."
-        '
-        'ProposeRecipetToolStripMenuItem
-        '
-        Me.ProposeRecipetToolStripMenuItem.Name = "ProposeRecipetToolStripMenuItem"
-        Me.ProposeRecipetToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
-        Me.ProposeRecipetToolStripMenuItem.Text = "Propose Reciept..."
-        '
-        'TestToolStripMenuItem
-        '
-        Me.TestToolStripMenuItem.Name = "TestToolStripMenuItem"
-        Me.TestToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
-        Me.TestToolStripMenuItem.Text = "test"
         '
         'StatusStrip1
         '
@@ -115,6 +109,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.IsMdiContainer = True
+        Me.KeyPreview = True
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MaximumSize = New System.Drawing.Size(1050, 768)
         Me.Name = "frmMain"
@@ -131,11 +126,10 @@ Partial Class frmMain
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents FileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents NewRecieptToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ProposeRecipetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents FileToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
     Friend WithEvents ToolStripStatusLabel1 As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents tslUser As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents TestToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ClosePurchaseOrderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

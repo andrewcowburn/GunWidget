@@ -46,9 +46,6 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ChilkatDotNet45">
-      <HintPath>..\..\..\Users\acowburn.GUNNERSENS\Downloads\ChilkatDotNet45-vs2013-9.5.0-x64\ChilkatDotNet45-vs2013-9.5.0-x64\ChilkatDotNet45.dll</HintPath>
-    </Reference>
     <Reference Include="Lawson.Net, Version=10.1.10001.5, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Tools\Lawson.Net.dll</HintPath>
@@ -94,16 +91,16 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="frmTestWS.Designer.vb">
-      <DependentUpon>frmTestWS.vb</DependentUpon>
+    <Compile Include="frmInput.Designer.vb">
+      <DependentUpon>frmInput.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmTestWS.vb">
+    <Compile Include="frmInput.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAddRun.Designer.vb">
-      <DependentUpon>frmAddRun.vb</DependentUpon>
+    <Compile Include="frmProgress.Designer.vb">
+      <DependentUpon>frmProgress.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmAddRun.vb">
+    <Compile Include="frmProgress.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmAttributeEntry.Designer.vb">
@@ -118,18 +115,6 @@
     <Compile Include="frmDO.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAttributeEdit.Designer.vb">
-      <DependentUpon>frmAttributeEdit.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmAttributeEdit.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmLineReceiving.Designer.vb">
-      <DependentUpon>frmLineReceiving.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmLineReceiving.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frmPO.Designer.vb">
       <DependentUpon>frmPO.vb</DependentUpon>
     </Compile>
@@ -140,12 +125,6 @@
       <DependentUpon>frmMain.vb</DependentUpon>
     </Compile>
     <Compile Include="frmMain.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPost2M3.Designer.vb">
-      <DependentUpon>frmPost2M3.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmPost2M3.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmStartPO.Designer.vb">
@@ -175,11 +154,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Service References\ServiceReference1\Reference.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Service References\wsStockOperations\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -187,20 +161,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="frmAddRun.resx">
-      <DependentUpon>frmAddRun.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmAttributeEntry.resx">
       <DependentUpon>frmAttributeEntry.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDO.resx">
       <DependentUpon>frmDO.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmAttributeEdit.resx">
-      <DependentUpon>frmAttributeEdit.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmLineReceiving.resx">
-      <DependentUpon>frmLineReceiving.vb</DependentUpon>
+    <EmbeddedResource Include="frmInput.resx">
+      <DependentUpon>frmInput.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPO.resx">
       <DependentUpon>frmPO.vb</DependentUpon>
@@ -208,14 +176,11 @@
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPost2M3.resx">
-      <DependentUpon>frmPost2M3.vb</DependentUpon>
+    <EmbeddedResource Include="frmProgress.resx">
+      <DependentUpon>frmProgress.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmStartPO.resx">
       <DependentUpon>frmStartPO.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmTestWS.resx">
-      <DependentUpon>frmTestWS.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -225,6 +190,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="M3FDBTSTDataSet.xsc">
       <DependentUpon>M3FDBTSTDataSet.xsd</DependentUpon>
     </None>
@@ -246,31 +212,6 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
-    <None Include="Service References\ServiceReference1\InwardGoodsVB.ServiceReference1.ChangeResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference1\InwardGoodsVB.ServiceReference1.ChangeResponseType.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference1\InwardGoodsVB.ServiceReference1.CopyResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference1\InwardGoodsVB.ServiceReference1.CopyResponseType.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference1\InwardGoodsVB.ServiceReference1.CreateResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference1\InwardGoodsVB.ServiceReference1.CreateResponseType.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference1\InwardGoodsVB.ServiceReference1.DeleteResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference1\InwardGoodsVB.ServiceReference1.DeleteResponseType.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ServiceReference1\UserOperationsService.wsdl" />
     <None Include="Service References\wsStockOperations\InwardGoodsVB.wsStockOperations.CatchweightResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -315,7 +256,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ServiceReference1\" />
     <WCFMetadataStorage Include="Service References\wsStockOperations\" />
   </ItemGroup>
   <ItemGroup>
@@ -326,18 +266,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\wsStockOperations\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.vb</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServiceReference1\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServiceReference1\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServiceReference1\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.vb</LastGenOutput>
     </None>

@@ -1,12 +1,8 @@
 ﻿Imports System.Data.SqlClient
-Imports System.DirectoryServices
 Imports Lawson.M3.MvxSock
-Imports PocketSOAP
 Imports InwardGoodsVB.wsStockOperations
 Imports System.ServiceModel
 Imports System.Diagnostics
-Imports Microsoft.Web.Services3.Referral
-
 
 Public Class frmPO
     Private _poNumber As String
@@ -18,9 +14,6 @@ Public Class frmPO
     Dim adapter As New SqlDataAdapter
     Dim ds As New DataSet
     Dim ds2 As New DataSet
-    Dim dsline As New DataSet
-    Dim dsBlank As New DataSet
-    Dim dtBlank As New DataTable
     Dim sql As String
     Dim QtySaved As Integer
     Dim LineNo As String
@@ -29,26 +22,16 @@ Public Class frmPO
     Dim attributeValue As String
     Dim lotControl As Integer = 0
     Public attributeTable As DataTable = New DataTable("Attribute Table")
-    Dim strWrk, strWrk1, strWrk2 As String
     Dim runNumber As Integer
     Private frmAttEnt As frmAttributeEntry
-    Private _dt As DataTable
-    Dim duplicatePacks As Integer
     Dim i As Integer
     Dim j As Integer
     Dim itemQty As Integer
-    Dim packQty As Integer
-    Dim qtyTotal As Integer
-    Dim RUN_NUMBER As String
     Dim img As Image
-    Dim frmProg As frmProgress
-    Private frmPurchaseOrder As frmPO
     Dim delete As String
-    Dim dsLabels As New DataSet
     Dim currentDate As DateTime = DateTime.Now
     Dim intday As String = currentDate.Day
     Dim intYear As String = currentDate.Year
-    Dim pb As New ProgressBar
     Dim rc
     Dim todayDate As String
     Dim respUser As String
@@ -57,7 +40,6 @@ Public Class frmPO
     Dim isPack As Boolean
     Dim putAway As String
     Dim lotNO As String
-    Dim isLotControl As Boolean
     Dim purOrderLine As String
     Dim itemNumber As String
     Dim strATNR As String
@@ -75,7 +57,6 @@ Public Class frmPO
     Dim shortpack As Integer
     Dim attributeItemNO As String
     Dim Desc As String
-    Dim company As String
     Dim Server As String
     Dim Port As String
     Dim UserID As String
@@ -85,7 +66,7 @@ Public Class frmPO
     Dim sid As New SERVER_ID
     Dim progressText As String
 
-    'dim global contsructors for passing values to the form from parent form 
+    'dim global constructors for passing values to the form from parent form 
     Public Property poNumber() As String
         Get
             Return _poNumber
@@ -118,11 +99,10 @@ Public Class frmPO
     End Sub
 
     Private Sub frmPO_Load(sender As Object, e As EventArgs) Handles Me.Load
-        'set the title of the form to the current PO number being edited/created
-        Me.Text = igType & " " & Me.poNumber
+        Me.Text = igType & " " & Me.poNumber 'set the title of the form to the current PO number being edited/created
         connectionString = "Data Source=m3db;Initial Catalog=M3FDBTST;Persist Security Info=True;User ID=Query;Password=Query"
 
-        'relevant sql statment, determined by weather the number entered was PO, DO or Container
+        'relevant sql statment, determined by whether the number entered was PO, DO or Container
         If igType = "PO" Then
             sql = "SELECT * FROM MPHEAD where IAPUNO = '" & Trim(Me.poNumber) & "'"
         ElseIf igType = "DO" Then
@@ -174,6 +154,7 @@ Public Class frmPO
             sql = "SELECT * FROM MITMAS WHERE MMITNO = '" & ds2.Tables(0).Rows(i)("IBITNO") & "';"
             connection = New SqlConnection(connectionString)
 
+            'run the above sql
             Try
                 connection.Open()
                 command = New SqlCommand(sql, connection)
@@ -239,8 +220,8 @@ Public Class frmPO
         'set the run number 
         runNumber = ds2.Tables("Runs").Rows.Count + 1
 
-        'check that there has actually been some data entered into the cells which are relavant to the prudct, and if thier hasn't prompt the user
-        If attributeValue.Contains("IX") Then
+        'check that there has actually been some data entered into the cells which are relevent to the prudct, and if there hasn't prompt the user
+        If attributeValue.Contains("IX") Then 'if the item is a mixed or fixed pack product handle it's data entry
             If Not totPackQty = 0 Then
                 frmAttEnt = New frmAttributeEntry(Me.attributeTable, supPackID, False, ds2, runNumber)
                 If attributeValue.Contains("IX") Then
@@ -253,7 +234,7 @@ Public Class frmPO
             Else
                 MessageBox.Show("You have not entered any packs, enter packs to be received.")
             End If
-        ElseIf attributeValue = "BATCH" Or attributeValue = "EXPIRY" Then
+        ElseIf attributeValue = "BATCH" Or attributeValue = "EXPIRY" Then 'if the item is a Batch or Expiry product handle it's data entry 
             For countRows = 0 To dgvItems.Rows.Count - 1
                 dgvItems.Rows(countRows).Cells("Packs Received").Value = 1
             Next
@@ -267,7 +248,7 @@ Public Class frmPO
             Else
                 MessageBox.Show("You have not entered any items, enter items to be received.")
             End If
-        ElseIf attributeValue = "STANDARD" Then
+        ElseIf attributeValue = "STANDARD" Then ' if the item is a standard product handle the data entry
             If Not totItemQty = 0 And Not totPackQty = 0 Then
                 frmAttEnt = New frmAttributeEntry(Me.attributeTable, supPackID, False, ds2, runNumber)
                 If frmAttEnt.IsDisposed = False Then
@@ -377,7 +358,6 @@ Public Class frmPO
         Dim Characters As String = ChrW(Keys.Tab)
         If InStr(Characters, e.KeyChar) = 1 Then
             If Me.dgvItems.CurrentCell.ColumnIndex = 1 Then
-                'Me.dgvItems.CurrentCell.ColumnIndex = Me.dgvItems.CurrentCell.ColumnIndex + 1
                 If Me.dgvItems.CurrentRow.Index = Me.dgvItems.Rows.Count - 1 Then
                     Me.dgvItems.CurrentCell = Me.dgvItems.Rows(0).Cells(17)
                 Else
@@ -391,9 +371,7 @@ Public Class frmPO
     Private Function PostToM3(ByVal runNumber As String)
         Dim success As Boolean
 
-
-        ' load relevant run into dataset
-
+        ' load relevant run into "Run", this is attributes tables with all records.
         connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect " & _
                             "Timeout=15;Encrypt=False;TrustServerCertificate=False"
         sql = "SELECT * FROM Attributes WHERE RUN_NUMBER = '" & poNumber & runNumber & "';"
@@ -415,6 +393,7 @@ Public Class frmPO
             MessageBox.Show(ex.ToString)
         End Try
 
+        'load relevant data into the "packs", table this is attributes table with only the header recordss
         connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect " & _
                             "Timeout=15;Encrypt=False;TrustServerCertificate=False"
         sql = "SELECT * FROM Attributes WHERE PACKTYPE IS NOT NULL AND RUN_NUMBER = '" & poNumber & runNumber & "';"
@@ -433,18 +412,18 @@ Public Class frmPO
             command.Dispose()
             connection.Close()
 
-
+            'get the total number of packs from the "packs"" table by counting the number of records.
             Dim runs As Integer = ds.Tables("Packs").Compute("Count(PackQty)", "")
 
-            frmProgress.ProgressSetup(runs * 2)
+            frmProgress.ProgressSetup(runs * 2) 'setup the progressbar
 
             For i = 0 To ds.Tables("Packs").Rows.Count - 1
                 Me.Cursor = Cursors.WaitCursor
 
-                progressText = i + 1 & " of " & runs & " products processing"
-
+                progressText = i + 1 & " of " & runs & " products processing" 'inccrement the progressbar
                 frmProgress.IncProg(progressText)
 
+                'run the required M3 API calls to post the recepit to M3.
                 success = PPS001MI()
                 If success Then
                     success = MWS070MI()
@@ -537,6 +516,9 @@ Public Class frmPO
 
 
     Private Sub WSCATCHWEIGHT()
+
+
+        ' create the webservices clinet and set values.
         Dim client As New StockOperationsClient
         Dim binding As New System.ServiceModel.BasicHttpBinding
         binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly
@@ -546,8 +528,6 @@ Public Class frmPO
         client.ClientCredentials.UserName.UserName = "DTAMIGR"
         client.ClientCredentials.UserName.Password = "Q190E87AG"
 
-        ' MessageBox.Show(client.Endpoint.Address.ToString)
-        ' MessageBox.Show(client.Endpoint.Name.ToString)
 
         'create lws header
         Dim header = New lws
@@ -578,6 +558,7 @@ Public Class frmPO
     End Sub
 
     Private Function CUSTEXTMI()
+        'set M3 API parameters
         Server = "M3BE"
         Port = "16205"
         UserID = "DTAMIGR"
@@ -585,18 +566,18 @@ Public Class frmPO
         APIName = "CUSEXTMI"
         APIOpr = "AddFieldValue"
         Server = "M3BE"
-        ' Connect API here
+
+        ' Connect API
         rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, Nothing)
         If rc <> 0 Then
             MvxSock.ShowLastError(sid, "Error Occurred: ")
-            'GoTo AbnormalExit
         End If
 
-        MvxSock.SetField(sid, "FILE", "AAAA")       '
+
+        MvxSock.SetField(sid, "FILE", "AAAA")
         MvxSock.SetField(sid, "PK01", strATNR) 'Attribute Number
         MvxSock.SetField(sid, "A121", tally) 'Attribute ID
         MvxSock.SetField(sid, "N096", wrkCAWE) 'Value for Attribute
-
 
         ' set the transaction name and call it
         MvxSock.SetTrimFields(sid, 0) ' Do not trim trailing spaces
@@ -605,6 +586,7 @@ Public Class frmPO
             MvxSock.ShowLastError(sid, "Error Occurred: ")
         End If
 
+        'return value so the parent function will proceed if the API call is a success
         If rc = 0 Then
             Return True
         Else
@@ -614,6 +596,7 @@ Public Class frmPO
     End Function
 
     Private Function ATS101MI()
+        'set M3 API parameters
         Server = "M3BE"
         Port = "16205"
         UserID = "DTAMIGR"
@@ -621,11 +604,14 @@ Public Class frmPO
         APIName = "ATS101MI"
         APIOpr = "SetAttrValue"
 
+        ' connect api
         rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, Nothing)
 
-        ' connect api here
+
         attQty = ds.Tables("run").Rows(j)("attribute_qty")
         attVal = Trim((ds.Tables("run").Rows(j)("attribute_value")))
+
+
         MvxSock.SetField(sid, "CONO", "100")       '
         MvxSock.SetField(sid, "ATNR", strATNR) 'attribute number
         MvxSock.SetField(sid, "ATID", attVal) 'attribute id

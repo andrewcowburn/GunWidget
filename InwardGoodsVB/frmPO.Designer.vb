@@ -28,7 +28,6 @@ Partial Class frmPO
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Me.lblTitle = New System.Windows.Forms.Label()
         Me.lblOne = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -45,26 +44,17 @@ Partial Class frmPO
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbNewRun = New System.Windows.Forms.ToolStripButton()
         Me.ttbuttons = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnCreateNewDD = New System.Windows.Forms.Button()
         CType(Me.dgvItems, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvRun, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
-        'lblTitle
-        '
-        Me.lblTitle.AutoSize = True
-        Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTitle.Location = New System.Drawing.Point(12, 34)
-        Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(529, 31)
-        Me.lblTitle.TabIndex = 0
-        Me.lblTitle.Text = "Inward Good Processing for PO XXXXXXX"
-        '
         'lblOne
         '
         Me.lblOne.AutoSize = True
         Me.lblOne.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblOne.Location = New System.Drawing.Point(15, 74)
+        Me.lblOne.Location = New System.Drawing.Point(18, 36)
         Me.lblOne.Name = "lblOne"
         Me.lblOne.Size = New System.Drawing.Size(146, 13)
         Me.lblOne.TabIndex = 1
@@ -73,7 +63,7 @@ Partial Class frmPO
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(15, 166)
+        Me.Label2.Location = New System.Drawing.Point(18, 128)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(0, 13)
         Me.Label2.TabIndex = 2
@@ -82,7 +72,7 @@ Partial Class frmPO
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(15, 127)
+        Me.Label4.Location = New System.Drawing.Point(18, 89)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(92, 13)
         Me.Label4.TabIndex = 4
@@ -92,7 +82,7 @@ Partial Class frmPO
         '
         Me.lblStatusText.AutoSize = True
         Me.lblStatusText.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatusText.Location = New System.Drawing.Point(15, 155)
+        Me.lblStatusText.Location = New System.Drawing.Point(18, 117)
         Me.lblStatusText.Name = "lblStatusText"
         Me.lblStatusText.Size = New System.Drawing.Size(47, 13)
         Me.lblStatusText.TabIndex = 5
@@ -102,7 +92,7 @@ Partial Class frmPO
         '
         Me.lblTwo.AutoSize = True
         Me.lblTwo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTwo.Location = New System.Drawing.Point(15, 101)
+        Me.lblTwo.Location = New System.Drawing.Point(18, 63)
         Me.lblTwo.Name = "lblTwo"
         Me.lblTwo.Size = New System.Drawing.Size(72, 13)
         Me.lblTwo.TabIndex = 6
@@ -112,7 +102,7 @@ Partial Class frmPO
         '
         Me.lblWarehouseID.AutoSize = True
         Me.lblWarehouseID.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWarehouseID.Location = New System.Drawing.Point(214, 127)
+        Me.lblWarehouseID.Location = New System.Drawing.Point(217, 89)
         Me.lblWarehouseID.Name = "lblWarehouseID"
         Me.lblWarehouseID.Size = New System.Drawing.Size(49, 13)
         Me.lblWarehouseID.TabIndex = 8
@@ -122,7 +112,7 @@ Partial Class frmPO
         '
         Me.lblStatus.AutoSize = True
         Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(214, 155)
+        Me.lblStatus.Location = New System.Drawing.Point(217, 117)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(49, 13)
         Me.lblStatus.TabIndex = 9
@@ -132,7 +122,7 @@ Partial Class frmPO
         '
         Me.lblCreditorID.AutoSize = True
         Me.lblCreditorID.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCreditorID.Location = New System.Drawing.Point(214, 101)
+        Me.lblCreditorID.Location = New System.Drawing.Point(217, 63)
         Me.lblCreditorID.Name = "lblCreditorID"
         Me.lblCreditorID.Size = New System.Drawing.Size(49, 13)
         Me.lblCreditorID.TabIndex = 11
@@ -142,7 +132,7 @@ Partial Class frmPO
         '
         Me.lblPO.AutoSize = True
         Me.lblPO.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblPO.Location = New System.Drawing.Point(214, 74)
+        Me.lblPO.Location = New System.Drawing.Point(217, 36)
         Me.lblPO.Name = "lblPO"
         Me.lblPO.Size = New System.Drawing.Size(56, 13)
         Me.lblPO.TabIndex = 12
@@ -171,7 +161,7 @@ Partial Class frmPO
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvItems.DefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvItems.Location = New System.Drawing.Point(18, 197)
+        Me.dgvItems.Location = New System.Drawing.Point(21, 165)
         Me.dgvItems.Name = "dgvItems"
         Me.dgvItems.Size = New System.Drawing.Size(933, 211)
         Me.dgvItems.TabIndex = 13
@@ -180,7 +170,7 @@ Partial Class frmPO
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(15, 181)
+        Me.Label7.Location = New System.Drawing.Point(18, 147)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(65, 13)
         Me.Label7.TabIndex = 15
@@ -209,7 +199,7 @@ Partial Class frmPO
         DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvRun.DefaultCellStyle = DataGridViewCellStyle4
-        Me.dgvRun.Location = New System.Drawing.Point(18, 448)
+        Me.dgvRun.Location = New System.Drawing.Point(21, 420)
         Me.dgvRun.Name = "dgvRun"
         Me.dgvRun.ReadOnly = True
         DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
@@ -227,7 +217,7 @@ Partial Class frmPO
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(15, 432)
+        Me.Label3.Location = New System.Drawing.Point(18, 398)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(104, 13)
         Me.Label3.TabIndex = 17
@@ -250,7 +240,17 @@ Partial Class frmPO
         Me.tsbNewRun.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbNewRun.Name = "tsbNewRun"
         Me.tsbNewRun.Size = New System.Drawing.Size(23, 22)
-        Me.tsbNewRun.Text = "New Run of Tally or Fixed Packs"
+        Me.tsbNewRun.Text = "Create New Delivery Docket (Ctrl+N)"
+        '
+        'btnCreateNewDD
+        '
+        Me.btnCreateNewDD.Location = New System.Drawing.Point(21, 637)
+        Me.btnCreateNewDD.Name = "btnCreateNewDD"
+        Me.btnCreateNewDD.Size = New System.Drawing.Size(156, 33)
+        Me.btnCreateNewDD.TabIndex = 20
+        Me.btnCreateNewDD.Text = "Create New Delivery Docket"
+        Me.ttbuttons.SetToolTip(Me.btnCreateNewDD, "Create new delivery docket (Ctrl+N)")
+        Me.btnCreateNewDD.UseVisualStyleBackColor = True
         '
         'frmPO
         '
@@ -259,6 +259,7 @@ Partial Class frmPO
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(1034, 730)
         Me.ControlBox = False
+        Me.Controls.Add(Me.btnCreateNewDD)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.dgvRun)
@@ -273,7 +274,6 @@ Partial Class frmPO
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.lblOne)
-        Me.Controls.Add(Me.lblTitle)
         Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.KeyPreview = True
         Me.MaximumSize = New System.Drawing.Size(1050, 768)
@@ -291,7 +291,6 @@ Partial Class frmPO
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents lblTitle As System.Windows.Forms.Label
     Friend WithEvents lblOne As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label4 As System.Windows.Forms.Label
@@ -308,4 +307,5 @@ Partial Class frmPO
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents tsbNewRun As System.Windows.Forms.ToolStripButton
     Friend WithEvents ttbuttons As System.Windows.Forms.ToolTip
+    Friend WithEvents btnCreateNewDD As System.Windows.Forms.Button
 End Class

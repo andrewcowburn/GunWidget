@@ -141,7 +141,7 @@ Public Class frmAttributeEntry
 
 
     Private Sub btnConfirm_Click(sender As Object, e As EventArgs) Handles btnConfirm.Click
-        Dim dbConnString As String = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+        Dim dbConnString As String = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
 
         If Me.isThisAnEdit Then
 
@@ -228,7 +228,7 @@ Public Class frmAttributeEntry
 
                     duplicatePack = MessageBox.Show("Does the next pack have the same Tally Information as this pack?", "Duplicate Pack?", MessageBoxButtons.YesNo)
                     If duplicatePack = 6 Then
-                        dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the next pack of " & ProductName, "", supPackID, False, False)
+                        dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the next pack of " & System.Environment.NewLine & ProductName, "", supPackID, False, False)
                         If Not supPackID = "" Then
                             dsLineItems.Tables("Attribute Table").Rows(0)("AEQTY") = supPackID
                             dgvAttributeEntry.Refresh()
@@ -238,7 +238,7 @@ Public Class frmAttributeEntry
                             GoTo exitRoutine
                         End If
                     Else
-                        dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the next pack of " & ProductName, "", supPackID, False, False)
+                        dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the next pack of" & System.Environment.NewLine & ProductName, "", supPackID, False, False)
                         If not supPackID = "" then
                             dsLineItems.Tables("Attribute Table").Rows(0)("AEQTY") = supPackID
                             For i = 1 To dsLineItems.Tables("Attribute Table").Rows.Count - 1
@@ -265,11 +265,11 @@ Public Class frmAttributeEntry
                     LoadAttributeTable()
                 Else
                     If lineloop = dsLineItems.Tables(0).Rows.Count - 1 Then
-                        MessageBox.Show("All packs entered")
+                        MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
 exitRoutine:
                         lineloop = 0
                         If cleanupExit Then
-                            deleteRun(po, runNumber)
+                            deleteRun(po, RUN_NUMBER)
                         End If
                         Me.Close()
                         frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
@@ -286,9 +286,9 @@ exitRoutine:
     Public Function HowManyPacks()
         Try
 tryagain:
-            dd.ShowDialog("Duplicate Packs", "How many of the " & remPack & " remaining packs of " & ProductName & " are the same as this ?", "", totPacks, False, False)
+            dd.ShowDialog("Duplicate Packs", "How many of the " & remPack & " remaining packs of " & System.Environment.NewLine & ProductName & System.Environment.NewLine & " are the same as this ?", "", totPacks, False, False)
             'totPacks = InputBox("How many of the " & remPack & " remaining packs of " & ProductName & " are the same as this ?")
-            Dim dbConnString As String = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+            Dim dbConnString As String = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
 
             If totPacks > packQty - 1 Then
                 MessageBox.Show("A number greater than the number of packs being received has been entered, re-enter a number " & remPack & " or less.")
@@ -315,7 +315,7 @@ tryagain:
                 LoadAttributeTable()
             Else
                 If lineloop = dsLineItems.Tables(0).Rows.Count - 1 Then
-                    MessageBox.Show("All packs entered")
+                    MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     lineloop = 0
                     Me.Close()
                     frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
@@ -359,6 +359,7 @@ tryagain:
             dgvAttributeEntry.Columns("ROWNUMBER").Visible = False
             dgvAttributeEntry.Columns(3).HeaderText = "Qty"
             dgvAttributeEntry.Columns(1).HeaderText = "Value"
+            dgvAttributeEntry.Columns(1).ReadOnly = True
             btnConfirm.Enabled = True
         Else
             btnConfirm.Enabled = False
@@ -424,7 +425,7 @@ tryagain:
                 Case "BATCH"
                     If lineloop = 0 Then
                         'write into the Gunnersen database the details of the run
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
                         sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
                         connection = New SqlConnection(connectionString)
                         Try
@@ -437,17 +438,17 @@ tryagain:
                     End If
 
                     If itemQty > 0 Then
-                        dd.ShowDialog("Batch Number", "Please enter the batch number for " & ProductName, batchNo, batchNo, False, False)
+                        dd.ShowDialog("Batch Number", "Please enter the batch number for " & System.Environment.NewLine & ProductName, batchNo, batchNo, False, False)
                         If Not batchNo = "" Then
                             lblPacks.Text = "Pack number " & lineloop & " of " & packQty
                             lotcontrol = 1
                         Else
-                            MessageBox.Show("You have pressed cancel, nothing has been saved.")
+                            MessageBox.Show("You have pressed cancel, nothing has been saved.", "Not Saved", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                             cleanupExit = True
                             GoTo ExitRoutine
                         End If
                         'write into the Gunnersen database the details of the line
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
                         sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "');"
                         connection = New SqlConnection(connectionString)
                         Try
@@ -462,7 +463,7 @@ tryagain:
                             lineloop = lineloop + 1
                             LoadAttributeTable()
                         Else
-                            MessageBox.Show("All items entered")
+                            MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
                             lineloop = 0
                             Me.Close()
                             frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
@@ -474,7 +475,7 @@ tryagain:
                             lineloop = lineloop + 1
                             LoadAttributeTable()
                         Else
-                            MessageBox.Show("All items entered")
+                            MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
                             lineloop = 0
                             Me.Close()
                             frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
@@ -486,7 +487,7 @@ tryagain:
                 Case "EXPIRY"
                     If lineloop = 0 Then
                         'write into the Gunnersen database the details of the run
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
                         sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
                         connection = New SqlConnection(connectionString)
                         Try
@@ -499,7 +500,7 @@ tryagain:
                     End If
 
                     If itemQty > 0 Then
-                        dd.ShowDialog("Batch Number", "Please enter the manufactured date for " & ProductName, batchNo, batchNo, False, True)
+                        dd.ShowDialog("Batch Number", "Please enter the manufactured date for " & System.Environment.NewLine & ProductName, batchNo, batchNo, False, True)
                         If Not batchNo = "" Then
                             lblPacks.Text = "Pack number " & lineloop & " of " & packQty
                             lotcontrol = 1
@@ -512,7 +513,7 @@ tryagain:
                         expdate = expdate.AddYears(2)
                         batchNo = expdate.ToShortDateString
                         'write into the Gunnersen database the details of the line
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
                         sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "');"
                         connection = New SqlConnection(connectionString)
                         Try
@@ -527,7 +528,7 @@ tryagain:
                             lineloop = lineloop + 1
                             LoadAttributeTable()
                         Else
-                            MessageBox.Show("All items entered")
+                            MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
                             lineloop = 0
                             Me.Close()
                             frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
@@ -539,7 +540,7 @@ tryagain:
                             lineloop = lineloop + 1
                             LoadAttributeTable()
                         Else
-                            MessageBox.Show("All items entered")
+                            MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
                             lineloop = 0
                             Me.Close()
                             frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
@@ -550,16 +551,9 @@ tryagain:
 
                 Case "STANDARD"
 
-                    'don't think this is needed anymore
-                    ''get the list of previous runs saved for this purchase order
-                    'connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                    'sql = "SELECT * FROM LineReceiving WHERE PO_ID= '" & po & lineNumber & subLine & "';"
-                    'RunSQL(connectionString, sql, "Run List")
-
-
                     If lineloop = 0 Then
                         'write into the Gunnersen database the details of the run
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
                         sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
                         connection = New SqlConnection(connectionString)
                         Try
@@ -573,7 +567,7 @@ tryagain:
 
                     If itemQty > 0 Then
                         'write into the Gunnersen database the details of the line
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
                         sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "');"
                         connection = New SqlConnection(connectionString)
                         Try
@@ -588,7 +582,7 @@ tryagain:
                             lineloop = lineloop + 1
                             LoadAttributeTable()
                         Else
-                            MessageBox.Show("All packs entered")
+                            MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
                             lineloop = 0
                             Me.Close()
                             frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
@@ -600,7 +594,7 @@ tryagain:
                             lineloop = lineloop + 1
                             LoadAttributeTable()
                         Else
-                            MessageBox.Show("All packs entered")
+                            MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
                             lineloop = 0
                             Me.Close()
                             frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
@@ -615,10 +609,9 @@ tryagain:
                     If packQty <> 0 Then
 
                         If attributeValue.Contains("MIXED") Then
-                            dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the first pack of " & ProductName, "", supPackID, False, False)
-                            'supPackID = InputBox(lineloop & packLoop & " Please enter the Supplier Pack Number for the first pack of " & ProductName, )
+                            dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the first pack of" & System.Environment.NewLine & ProductName, "", supPackID, False, False)
                             If Not supPackID = "" Then
-                                lblPacks.Text = "Pack number " & lineloop & " of " & packQty
+                                lblPacks.Text = "Pack number " & 1 & " of " & packQty
                                 lotcontrol = 1
                             Else
                                 MessageBox.Show("You have pressed cancel, nothing has been saved.")
@@ -755,7 +748,7 @@ tryagain:
                             dsLineItems.Tables.Add(attributeTable)
 
                             'get the list of previous runs saved for this purchase order
-                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
                             sql = "SELECT * FROM LineReceiving WHERE PO_ID= '" & po & lineNumber & subLine & "';"
                             RunSQL(connectionString, sql, "Run List")
 
@@ -767,7 +760,7 @@ tryagain:
                             End If
 
                             'write into the Gunnersen database the details of the line
-                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
                             ' There is dummy data in the below sql string
                             sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & lineNumber & subLine & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
                             connection = New SqlConnection(connectionString)
@@ -818,9 +811,12 @@ tryagain:
                             lineloop = lineloop + 1
                             LoadAttributeTable()
                         Else
-                            MessageBox.Show("All packs entered")
+                            MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
 ExitRoutine:
                             lineloop = 0
+                            If cleanupExit Then
+                                deleteRun(po, RUN_NUMBER)
+                            End If
                             Me.Close()
                             frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
                             frmPurchaseOrder.Show()
@@ -847,7 +843,7 @@ ExitRoutine:
             Dim test = attributeValue
 
             'query the Gunnersen database for the relevant run and fill its details in the dataset
-            Dim dbConnString As String = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+            Dim dbConnString As String = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
             sql = "SELECT * FROM Attributes WHERE RUN_NUMBER ='" & RUN_NUMBER & "';"
             connection = New SqlConnection(dbConnString)
             Try
@@ -1081,7 +1077,7 @@ ExitRoutine:
     End Sub
 
     Private Sub deleteRun(ByVal PurchNo As String, ByVal runNo As String)
-        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=sa;Password=NewChair4JAC;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
 
         sql = "DELETE " & _
              " FROM Attributes" & _
@@ -1094,7 +1090,7 @@ ExitRoutine:
 
             sql = "DELETE " & _
                   " FROM LineReceiving" & _
-                  " WHERE RUN_NO='" & runNo & "';"
+                  " WHERE RUN_NO='" & runNo & "' AND PO='" & PurchNo & "';"
             connection = New SqlConnection(connectionString)
 
             command = New SqlCommand(sql, connection)

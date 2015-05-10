@@ -35,17 +35,17 @@ Partial Class frmStartPO
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(21, 21)
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(90, 24)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(269, 13)
+        Me.Label1.Size = New System.Drawing.Size(143, 13)
         Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Please enter the PO, DO or Container number."
+        Me.Label1.Text = "Please enter the PO number."
         '
         'txtPONumber
         '
         Me.txtPONumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPONumber.Location = New System.Drawing.Point(49, 62)
+        Me.txtPONumber.Location = New System.Drawing.Point(47, 52)
         Me.txtPONumber.Name = "txtPONumber"
         Me.txtPONumber.Size = New System.Drawing.Size(217, 44)
         Me.txtPONumber.TabIndex = 1
@@ -64,7 +64,7 @@ Partial Class frmStartPO
         '
         'btnSubmit
         '
-        Me.btnSubmit.Location = New System.Drawing.Point(77, 132)
+        Me.btnSubmit.Location = New System.Drawing.Point(77, 113)
         Me.btnSubmit.Name = "btnSubmit"
         Me.btnSubmit.Size = New System.Drawing.Size(75, 23)
         Me.btnSubmit.TabIndex = 3
@@ -73,7 +73,7 @@ Partial Class frmStartPO
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(158, 132)
+        Me.btnCancel.Location = New System.Drawing.Point(158, 113)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 4
@@ -84,7 +84,7 @@ Partial Class frmStartPO
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(315, 167)
+        Me.ClientSize = New System.Drawing.Size(315, 152)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnSubmit)
         Me.Controls.Add(Me.txtPONumber)

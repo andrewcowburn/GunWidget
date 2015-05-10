@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "InwardGoodsVB", "InwardGoodsVB\InwardGoodsVB.vbproj", "{D4F616A1-70E8-4E15-8F80-E0A2E4B8FB93}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Gunnersen Inward Goods Receipting", "InwardGoodsVB\Gunnersen Inward Goods Receipting.vbproj", "{D4F616A1-70E8-4E15-8F80-E0A2E4B8FB93}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "InstallGunIGR", "InstallGunIGR\InstallGunIGR.vdproj", "{6A02035E-2A17-4926-B870-7511044D4650}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{D4F616A1-70E8-4E15-8F80-E0A2E4B8FB93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4F616A1-70E8-4E15-8F80-E0A2E4B8FB93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4F616A1-70E8-4E15-8F80-E0A2E4B8FB93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A02035E-2A17-4926-B870-7511044D4650}.Debug|Any CPU.ActiveCfg = Debug
+		{6A02035E-2A17-4926-B870-7511044D4650}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

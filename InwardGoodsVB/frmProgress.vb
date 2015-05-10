@@ -9,6 +9,9 @@
     Public Sub ProgressSetup(ByRef Maximum As Integer)
         prgProgress.Maximum = Maximum
         prgProgress.Value = 0
+        Dim y As Integer = Screen.PrimaryScreen.WorkingArea.Height / 2 - 200
+        Dim x As Integer = Screen.PrimaryScreen.WorkingArea.Width / 2
+        Me.Location = New Point(x, y)
         Me.Show()
     End Sub
 

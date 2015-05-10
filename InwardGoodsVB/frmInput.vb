@@ -15,6 +15,9 @@ Public Class frmInput
         If isDate Then
             txtInput.Visible = False
             dtpDate.Visible = True
+            Me.ActiveControl = Me.dtpDate
+        Else
+            Me.ActiveControl = Me.txtInput
         End If
 
         Me.lblPrompt.Text = PromptText

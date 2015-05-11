@@ -804,6 +804,7 @@ tryagain:
                         dgvAttributeEntry.Columns(1).HeaderText = "Value"
                         dgvAttributeEntry.Columns(0).Width = 114
                         dgvAttributeEntry.Columns(1).Width = 114
+                        dgvAttributeEntry.Columns(1).ReadOnly = True
                         creation = 1
                     Else
                         'if the pack qty is zero then go to the next line as long as this isn't the last line

@@ -612,7 +612,7 @@ Public Class frmPO
         attVal = Trim((ds.Tables("run").Rows(j)("attribute_value")))
 
 
-        MvxSock.SetField(sid, "CONO", "100")       '
+        MvxSock.SetField(sid, "CONO", "100")       'Company Number (always 100)
         MvxSock.SetField(sid, "ATNR", strATNR) 'attribute number
         MvxSock.SetField(sid, "ATID", attVal) 'attribute id
         MvxSock.SetField(sid, "ATVA", attQty) 'value for attribute
@@ -629,6 +629,8 @@ Public Class frmPO
             frmProgress.Close()
         End If
 
+
+        ' convert attribute value to decimal, this ensures that when the header record is reached the loop will exit.
         j = j + 1
         attVal = (ds.Tables("Run").Rows(j)("ATTRIBUTE_VALUE")).ToString.Length
         attVal = Decimal.Parse(attVal)
@@ -662,9 +664,9 @@ Public Class frmPO
             Loop
 
         Catch ex As Exception
-            'MessageBox.Show(ex.ToString)
         End Try
 
+        'return value so the parent function will proceed if the API call is a success
         If rc = 0 Then
             Return True
         Else
@@ -675,6 +677,7 @@ Public Class frmPO
     End Function
 
     Private Function MMS235MI()
+        'set M3 API parameters
         Server = "M3BE"
         Port = "16205"
         UserID = "DTAMIGR"
@@ -699,6 +702,7 @@ Public Class frmPO
 
         strATNR = MvxSock.GetField(sid, "ATNR")
 
+        'return value so the parent function will proceed if the API call is a success
         If rc = 0 Then
             Return True
         Else
@@ -708,6 +712,7 @@ Public Class frmPO
 
     Private Function MWS070MI()
 
+        'Set M3 API parameters
         Server = "M3BE"
         Port = "16205"
         UserID = "DTAMIGR"
@@ -740,6 +745,7 @@ Public Class frmPO
 
         End While
 
+        'return value so the parent function will proceed if the API call is a success
         If rc = 0 Then
             Return True
         Else
@@ -755,7 +761,7 @@ Public Class frmPO
                 frmAttEnt = New frmAttributeEntry(Me.attributeTable, supPackID, True, ds2, poNumber.ToString & dgvRun.Rows(e.RowIndex).Cells("RUN_NO").Value.ToString)
                 frmAttEnt.Show()
                 frmAttEnt.MdiParent = frmMain
-            ElseIf e.ColumnIndex = 1 Then 'post the run to m3
+            ElseIf e.ColumnIndex = 1 Then 'post the run to M3, but prompt the user first.
                 Dim post = MessageBox.Show("You are about to post this run to M3, this cannot be undone, do you wish to proceed?", "Post Run?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                 If post = 6 Then
                     PostToM3(dgvRun.Rows(e.RowIndex).Cells("RUN_NO").Value.ToString)
@@ -802,6 +808,7 @@ Public Class frmPO
         'delete the relevant run
         connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
 
+        'delete the lines from attributes
         sql = "DELETE " & _
              " FROM Attributes" & _
              " WHERE RUN_NUMBER='" & PurchNo & runNo & "';"
@@ -811,6 +818,7 @@ Public Class frmPO
             connection.Open()
             command.ExecuteNonQuery()
 
+            'delete the header record from LineReceiving
             sql = "DELETE " & _
                   " FROM LineReceiving" & _
                   " WHERE RUN_NO='" & runNo & "';"
@@ -849,7 +857,7 @@ Public Class frmPO
             MsgBox(ex.ToString)
         End Try
 
-        'fill the datagrid with the data from teh dataset table Runs
+        'fill the datagrid with the data from the dataset table Runs
         dgvRun.DataSource = ds2.Tables("Runs")
 
         'create the buttons in the run datagrid
@@ -894,12 +902,13 @@ Public Class frmPO
     End Function
 
     Public Function FillItemGrid()
+        'fill the main item grid with datat from M3 database
         connectionString = "Data Source=m3db;Initial Catalog=M3FDBTST;Persist Security Info=True;User ID=Query;Password=Query"
-        If igType = "PO" Then
+        If igType = "PO" Then 'sql query for M3 Purchase Orders
             sql = "SELECT MPLINE.IBPUNO, MPLINE.IBPNLI, MPLINE.IBPNLS, MPLINE.IBITNO, MITMAS.MMITDS, MITMAS.MMFUDS, MPLINE.IBWHLO, MPLINE.IBFACI, MPLINE.IBSITE, MPLINE.IBORQA, MPLINE.IBPUPR, MPLINE.IBPPUN, MPLINE.IBPUUN, MPLINE.IBRVQA, MITMAS.MMUNMS, MITMAS.MMALUC, MITMAS.MMSTUN " & _
             "FROM MPLINE LEFT JOIN MITMAS ON MPLINE.IBITNO = MITMAS.MMITNO " & _
             "WHERE MPLINE.IBPUNO='" & Me.poNumber & "';"
-        ElseIf igType = "DO" Then
+        ElseIf igType = "DO" Then 'sql query for M3 Distribution Orders
             sql = "SELECT MGLINE.MRPONR, MGLINE.MRPOSX, MGLINE.MRTRNR, MGLINE.MRITNO, MITMAS.MMFUDS, MGLINE.MRACQT " & _
                     "FROM MGLINE INNER JOIN MITMAS ON MGLINE.MRITNO = MITMAS.MMITNO " & _
                     "WHERE MGLINE.MRTRNR ='" & Me.poNumber & "';"
@@ -907,6 +916,7 @@ Public Class frmPO
         connection = New SqlConnection(connectionString)
 
         Try
+            'run the sql query and fill the dataset
             connection.Open()
             command = New SqlCommand(sql, connection)
             adapter.SelectCommand = command
@@ -924,6 +934,7 @@ Public Class frmPO
         Catch ex As Exception
             MsgBox(ex.ToString)
         End Try
+        'add the relevant tables if the don't exist.
         If Not ds2.Tables(0).Columns.Contains("Saved") Then
             ds2.Tables(0).Columns.Add("Saved")
             ds2.Tables(0).Columns.Add("Packs Received")
@@ -932,18 +943,18 @@ Public Class frmPO
         End If
 
         Try
-
+            'rename the columns of the grid
             If igType = "DO" Then
                 ds2.Tables(0).Columns("MRITNO").ColumnName = "IBITNO"
                 ds2.Tables(0).Columns("MRPOSX").ColumnName = "IBPNLS"
                 ds2.Tables(0).Columns("MRPONR").ColumnName = "IBPNLI"
             End If
 
+            'rename columns of the grid
             dgvItems.DataSource = ds2.Tables(0)
             If igType = "PO" Then
                 With dgvItems
                     .Columns("IBPUNO").Visible = False
-                    '.Columns("MMITDS").Visible = False
                     .Columns("IBWHLO").Visible = False
                     .Columns("IBFACI").Visible = False
                     .Columns("IBSITE").Visible = False
@@ -976,14 +987,17 @@ Public Class frmPO
             MessageBox.Show(ex.ToString)
         End Try
 
+        'set all columns of the items grid to read only part from the first two
         For i = 0 To dgvItems.Columns.Count - 3
             dgvItems.Columns(i).DisplayIndex = i + 2
             dgvItems.Columns(i).ReadOnly = True
         Next
 
+        ' move the two newly created columns to the left of the grid.
         dgvItems.Columns("Packs Received").DisplayIndex = 0
         dgvItems.Columns("Qty Received").DisplayIndex = 1
 
+        'set all columns to unsortable
         For i = 0 To dgvItems.Columns.Count - 1
             dgvItems.Columns(i).SortMode = DataGridViewColumnSortMode.NotSortable
         Next
@@ -995,7 +1009,7 @@ Public Class frmPO
             LineNo = ds2.Tables(0).Rows(count)("IBPNLI").ToString
             subLineNo = ds2.Tables(0).Rows(count)("IBPNLS").ToString
 
-            'Open the Gunnersen database and chek the number of packs already saved, if this number is equal to the total number for that line then diable any further entries. 
+            'Open the Gunnersen database and chek the number of packs already saved, if this number is equal to the total number for that line then disable any further entries. 
             connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
 
             If attributeValue.Contains("IX") Then
@@ -1005,6 +1019,7 @@ Public Class frmPO
             End If
             connection = New SqlConnection(connectionString)
 
+            'connect to the database and get the records
             Try
                 connection.Open()
                 command = New SqlCommand(sql, connection)
@@ -1031,8 +1046,9 @@ Public Class frmPO
     End Function
 
     Public Function PrintLabels(ByVal line As Integer)
+
+        'instanciate local variables for label printing
         Dim warehouseID As String
-        Dim branch As String
         Dim ProductID As String
         Dim typeFlag As String
         Dim printerid As String
@@ -1042,22 +1058,11 @@ Public Class frmPO
         Dim barcode As String
         Dim bin1 As String
         Dim bin2 As String
-
-        Dim startCount As Integer
-        Dim labelcount As Integer
         Dim loopval As Integer
 
-        If Len(intday.ToString) = 1 Then
-            intday = "0" & intday
-        End If
-        Dim intMonth As String = currentDate.Month
-        If Len(intMonth.ToString) = 1 Then
-            intMonth = "0" & intMonth
-        End If
-
-        Dim strRecDate = intday & intMonth & intYear
+        'retrieive values for use on the labels
+        Dim strRecDate = DateTime.Now.ToString("ddMMyyyy")
         warehouseID = ds2.Tables(0).Rows(line)("IBFACI")
-        branch = warehouseID
         If Strings.Left(warehouseID, 1) = "9" Then
             warehouseID = "900"
         End If
@@ -1070,15 +1075,17 @@ Public Class frmPO
             typeFlag = ds2.Tables("Product Table PO").Rows(line)("MMEVGR")
         End If
 
-        Dim FileNo = FreeFile()
-        Dim File2 = FreeFile()
-        ChDir(Environment.GetEnvironmentVariable("temp"))
+        'create the two labelprinting txt files for ftp label printing
+        Dim ftpcmd = FreeFile()
+        Dim lblprint = FreeFile()
+        ChDir(Environment.GetEnvironmentVariable("temp")) 'get the users temp directory
 
-        attributeValue = ds.Tables("Packs").Rows(packsRow)("PACKTYPE")
+        attributeValue = ds.Tables("Packs").Rows(packsRow)("PACKTYPE") 'get the attribute type, Mixed, fixed, standard, batch or expiry
 
-        If attributeValue.ToString.Contains("FIXED") Or attributeValue.ToString.Contains("MIXED") Then
+
+        If attributeValue.ToString.Contains("FIXED") Or attributeValue.ToString.Contains("MIXED") Then 'deal with lot control packs (mixed, fixed)
             lotControl = True
-            loopcount = 1
+            loopcount = 1 'lot control packs need one label at a time
             tally = ds.Tables("Packs").Rows(packsRow)("TALLY")
             wrkCAWE = ds.Tables("Packs").Rows(packsRow)("CATCHWEIGHT")
             perpack = wrkCAWE
@@ -1090,9 +1097,10 @@ Public Class frmPO
 
         Else
             lotControl = False
-            loopcount = ds.Tables("Packs").Rows(packsRow)("PACKQTY")
+            loopcount = ds.Tables("Packs").Rows(packsRow)("PACKQTY") 'non lot control packs can have multiple labels, hence the lable print runs an inner loop, rather than running the command again
             itemQty = ds.Tables("Packs").Rows(packsRow)("ITEMQTY")
 
+            'this routine set the value of the last label to the sortpack in the case that the total number of items cannot be divided by the total number of packs
             perpack = itemQty / loopcount
             If Not itemQty Mod loopcount = 0 Then
                 perpack = Math.Ceiling(perpack)
@@ -1101,19 +1109,22 @@ Public Class frmPO
                 shortpack = perpack
             End If
 
+            'set the value of the pack as required by the label printing table to reprint labels.
             ds.Tables("Packs").Rows(packsRow)("perPack") = perpack
             ds.Tables("Packs").Rows(packsRow)("shortPack") = shortpack
             ds.Tables("Packs").Rows(packsRow)("lotNo") = lotNO
             ds.Tables("Packs").Rows(packsRow)("putAway") = putAway
         End If
 
-        connectionString = "Data Source=SQL01;Initial Catalog=DSA;Persist Security Info=True;User ID=timms;Password=timms123"
+        'get the details of the users local labelprinting from gunnersen database
+        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
         sql = "SELECT *" & _
               " FROM LBLPrinter_DIM" & _
               " WHERE SysName = '" & Environ("computername") & "';"
 
         connection = New SqlConnection(connectionString)
 
+        'open the connection and get the data
         Try
             connection.Open()
             command = New SqlCommand(sql, connection)
@@ -1127,6 +1138,7 @@ Public Class frmPO
             MsgBox(ex.ToString)
         End Try
 
+        'set the local variables to the values retrived from the database
         If ds2.Tables("LblPrint").Rows.Count > 0 Then
             printerport = Trim((ds2.Tables("LblPrint").Rows(0)("Printer_Port")))
             printerid = Trim(ds2.Tables("LblPrint").Rows(0)("Printer_IP"))
@@ -1137,6 +1149,7 @@ Public Class frmPO
 
             barcode = GetBarcode(ProductID)
 
+            'get all of the product lines relevant that that product and warehouse (should only be 1)
             connectionString = "Data Source=m3db;Initial Catalog=M3FDBTST;Persist Security Info=True;User ID=Query;Password=Query"
             sql = "SELECT *" & _
                   " FROM MITBAL" & _
@@ -1178,93 +1191,93 @@ Public Class frmPO
             End If
             ds2.Tables.Remove("MITBAL")
 
-            FileOpen(FileNo, "ftp-cmd.txt", OpenMode.Output)
-            Print(FileNo, "open " & printerid & vbCrLf)
-            Print(FileNo, login & vbCrLf)
-            Print(FileNo, pw & vbCrLf)
-            Print(FileNo, "cd dest/" & printerport & vbCrLf)
-            Print(FileNo, "send " & Environment.GetEnvironmentVariable("temp") & "\labelprint.txt" & vbCrLf)
-            Print(FileNo, "bye")
-            FileClose(FileNo)
-            FileOpen(File2, "labelprint.txt", OpenMode.Output)
-            Do While loopcount > 0
+            'open the first label printing text file and write the relavenat value in it.
+            FileOpen(ftpcmd, "ftp-cmd.txt", OpenMode.Output)
+            Print(ftpcmd, "open " & printerid & vbCrLf)
+            Print(ftpcmd, login & vbCrLf)
+            Print(ftpcmd, pw & vbCrLf)
+            Print(ftpcmd, "cd dest/" & printerport & vbCrLf)
+            Print(ftpcmd, "send " & Environment.GetEnvironmentVariable("temp") & "\labelprint.txt" & vbCrLf)
+            Print(ftpcmd, "bye")
+            FileClose(ftpcmd)
+            FileOpen(lblprint, "labelprint.txt", OpenMode.Output)
+            Do While loopcount > 0 'as long a there are rows to print then start adding the values to the labelprinting file
 
                 If loopcount = 1 And attributeValue.Contains("STANDARD") Then
-                    perpack = shortpack
+                    perpack = shortpack 'print the shortpack value if the label to be printed is the last one.
                 End If
 
-                labelcount = (loopcount + startCount)
-                Print(File2, Chr(27) & "A" & vbCrLf)
-                Print(File2, Chr(27) & "#E3" & vbCrLf)
-                Print(File2, Chr(27) & "A124000776" & vbCrLf)
-                Print(File2, Chr(27) & "%1" & vbCrLf)
-                Print(File2, Chr(27) & "V2280" & Chr(27) & "H45" & Chr(27) & "CC2" & Chr(27) & "PY050" & vbCrLf)
-                Print(File2, Chr(27) & "V2300" & Chr(27) & "H350" & Chr(27) & "L0202" & Chr(27) & "XMGUNNERSEN" & vbCrLf)
+
+                'add the lines to the labelprinting file
+                Print(lblprint, Chr(27) & "A" & vbCrLf)
+                Print(lblprint, Chr(27) & "#E3" & vbCrLf)
+                Print(lblprint, Chr(27) & "A124000776" & vbCrLf)
+                Print(lblprint, Chr(27) & "%1" & vbCrLf)
+                Print(lblprint, Chr(27) & "V2280" & Chr(27) & "H45" & Chr(27) & "CC2" & Chr(27) & "PY050" & vbCrLf)
+                Print(lblprint, Chr(27) & "V2300" & Chr(27) & "H350" & Chr(27) & "L0202" & Chr(27) & "XMGUNNERSEN" & vbCrLf)
 
                 Select Case typeFlag
                     Case "0"
                         ' Don't know
                     Case "1"
-                        Print(File2, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY051" & vbCrLf) ' FSC 100%
+                        Print(lblprint, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY051" & vbCrLf) ' FSC 100%
                     Case "2"
-                        Print(File2, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY052" & vbCrLf) ' FSC Mix
+                        Print(lblprint, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY052" & vbCrLf) ' FSC Mix
                     Case "3"
-                        Print(File2, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY052" & vbCrLf) ' FSC Mix
+                        Print(lblprint, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY052" & vbCrLf) ' FSC Mix
                     Case "4"
-                        Print(File2, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY054" & vbCrLf) ' AFS/PEFC
+                        Print(lblprint, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY054" & vbCrLf) ' AFS/PEFC
                     Case "5"
-                        Print(File2, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY054" & vbCrLf) ' AFS/PEFC
+                        Print(lblprint, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY054" & vbCrLf) ' AFS/PEFC
                     Case "6"
-                        Print(File2, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY052" & vbCrLf) ' FSC Contr Wood
+                        Print(lblprint, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY052" & vbCrLf) ' FSC Contr Wood
                     Case "7"
-                        Print(File2, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY052" & vbCrLf) ' FSC Recycled
-                    Case Else
-                        ' not specified
+                        Print(lblprint, Chr(27) & "V2270" & Chr(27) & "H390" & Chr(27) & "C22" & Chr(27) & "PY052" & vbCrLf) ' FSC Recycled
                 End Select
 
-                Print(File2, Chr(27) & "V1250" & Chr(27) & "H600" & Chr(27) & "L0102" & Chr(27) & "XMLocations - Prime:" & vbCrLf)
-                Print(File2, Chr(27) & "V1050" & Chr(27) & "H700" & Chr(27) & "L0102" & Chr(27) & "XMPick:" & vbCrLf)
-                Print(File2, Chr(27) & "V500" & Chr(27) & "H250" & Chr(27) & "L0102" & Chr(27) & "XMQty Per Pack:" & vbCrLf)
-                Print(File2, Chr(27) & "&" & vbCrLf)
-                Print(File2, Chr(27) & "Z" & vbCrLf)
-                Print(File2, Chr(27) & "A" & vbCrLf)
-                Print(File2, Chr(27) & "%1" & vbCrLf)
-                Print(File2, Chr(27) & "/" & vbCrLf)
-                Print(File2, Chr(27) & "V400" & Chr(27) & "H50" & Chr(27) & "L0102" & Chr(27) & "XM" & warehouseID & "-" & strRecDate & vbCrLf)
+                Print(lblprint, Chr(27) & "V1250" & Chr(27) & "H600" & Chr(27) & "L0102" & Chr(27) & "XMLocations - Prime:" & vbCrLf)
+                Print(lblprint, Chr(27) & "V1050" & Chr(27) & "H700" & Chr(27) & "L0102" & Chr(27) & "XMPick:" & vbCrLf)
+                Print(lblprint, Chr(27) & "V500" & Chr(27) & "H250" & Chr(27) & "L0102" & Chr(27) & "XMQty Per Pack:" & vbCrLf)
+                Print(lblprint, Chr(27) & "&" & vbCrLf)
+                Print(lblprint, Chr(27) & "Z" & vbCrLf)
+                Print(lblprint, Chr(27) & "A" & vbCrLf)
+                Print(lblprint, Chr(27) & "%1" & vbCrLf)
+                Print(lblprint, Chr(27) & "/" & vbCrLf)
+                Print(lblprint, Chr(27) & "V400" & Chr(27) & "H50" & Chr(27) & "L0102" & Chr(27) & "XM" & warehouseID & "-" & strRecDate & vbCrLf)
 
 
-                If lotControl Then
-                    Print(File2, Chr(27) & "V1900" & Chr(27) & "H210" & Chr(27) & "L0102" & Chr(27) & "XM" & ProductID & vbCrLf)
-                    Print(File2, Chr(27) & "V1900" & Chr(27) & "H50" & Chr(27) & "L0104" & Chr(27) & "XM" & Desc & vbCrLf)
-                    Print(File2, Chr(27) & "V1900" & Chr(27) & "H150" & Chr(27) & "L0202" & Chr(27) & "XS" & tally & vbCrLf) ' fixed value here
+                If lotControl Then ' for products which are lot control dela with label details here
+                    Print(lblprint, Chr(27) & "V1900" & Chr(27) & "H210" & Chr(27) & "L0102" & Chr(27) & "XM" & ProductID & vbCrLf)
+                    Print(lblprint, Chr(27) & "V1900" & Chr(27) & "H50" & Chr(27) & "L0104" & Chr(27) & "XM" & Desc & vbCrLf)
+                    Print(lblprint, Chr(27) & "V1900" & Chr(27) & "H150" & Chr(27) & "L0202" & Chr(27) & "XS" & tally & vbCrLf) ' fixed value here
                     If loopval <= 1 Then
-                        Print(File2, Chr(27) & "V1900" & Chr(27) & "H550" & Chr(27) & "L0202" & Chr(27) & "XSSupplier Pack ID: " & strSuppPackID & vbCrLf)
+                        Print(lblprint, Chr(27) & "V1900" & Chr(27) & "H550" & Chr(27) & "L0202" & Chr(27) & "XSSupplier Pack ID: " & strSuppPackID & vbCrLf)
                     End If
                 Else
-                    Print(File2, Chr(27) & "V1900" & Chr(27) & "H300" & Chr(27) & "L0204" & Chr(27) & "XM" & ProductID & vbCrLf)
-                    Print(File2, Chr(27) & "V1900" & Chr(27) & "H50" & Chr(27) & "L0205" & Chr(27) & "XM" & Desc & vbCrLf)
+                    Print(lblprint, Chr(27) & "V1900" & Chr(27) & "H300" & Chr(27) & "L0204" & Chr(27) & "XM" & ProductID & vbCrLf)
+                    Print(lblprint, Chr(27) & "V1900" & Chr(27) & "H50" & Chr(27) & "L0205" & Chr(27) & "XM" & Desc & vbCrLf)
                 End If
 
-                Print(File2, Chr(27) & "V750" & Chr(27) & "H580" & Chr(27) & "L0203" & Chr(27) & "XM" & bin1 & vbCrLf)
-                Print(File2, Chr(27) & "V750" & Chr(27) & "H680" & Chr(27) & "L0203" & Chr(27) & "XM" & bin2 & vbCrLf)
+                Print(lblprint, Chr(27) & "V750" & Chr(27) & "H580" & Chr(27) & "L0203" & Chr(27) & "XM" & bin1 & vbCrLf)
+                Print(lblprint, Chr(27) & "V750" & Chr(27) & "H680" & Chr(27) & "L0203" & Chr(27) & "XM" & bin2 & vbCrLf)
                 ' Print(File2, Chr(27) & "V1050" & Chr(27) & "H400" & Chr(27) & "L0203" & Chr(27) & "XM" & bin3 & vbcrlf) ' bin 3 is facings
-                Print(File2, Chr(27) & "V200" & Chr(27) & "H250" & Chr(27) & "L0203" & Chr(27) & "XM" & perpack & vbCrLf)
-                Print(File2, Chr(27) & "V1900" & Chr(27) & "H630" & Chr(27) & "L0202" & Chr(27) & "XSPutAway Number: " & putAway & vbCrLf)
-                Print(File2, Chr(27) & "V1900" & Chr(27) & "H660" & Chr(27) & "BT101030103" & Chr(27) & "BW03100*" & putAway & "*" & vbCrLf)
-                Print(File2, Chr(27) & "V400" & Chr(27) & "H370" & Chr(27) & "L0202" & Chr(27) & "XSProduct ID" & vbCrLf)
-                Print(File2, Chr(27) & "V400" & Chr(27) & "H400" & Chr(27) & "BQ3015,1" & Trim(barcode) & vbCrLf)
-                Print(File2, Chr(27) & "V400" & Chr(27) & "H740" & Chr(27) & "XU" & Trim(barcode) & vbCrLf)
+                Print(lblprint, Chr(27) & "V200" & Chr(27) & "H250" & Chr(27) & "L0203" & Chr(27) & "XM" & perpack & vbCrLf)
+                Print(lblprint, Chr(27) & "V1900" & Chr(27) & "H630" & Chr(27) & "L0202" & Chr(27) & "XSPutAway Number: " & Trim(putAway) & vbCrLf)
+                Print(lblprint, Chr(27) & "V1900" & Chr(27) & "H660" & Chr(27) & "BT101030103" & Chr(27) & "BW03100*" & Trim(putAway) & "*" & vbCrLf)
+                Print(lblprint, Chr(27) & "V400" & Chr(27) & "H370" & Chr(27) & "L0202" & Chr(27) & "XSProduct ID" & vbCrLf)
+                Print(lblprint, Chr(27) & "V400" & Chr(27) & "H400" & Chr(27) & "BQ3015,1" & Trim(barcode) & vbCrLf)
+                Print(lblprint, Chr(27) & "V400" & Chr(27) & "H740" & Chr(27) & "XU" & Trim(barcode) & vbCrLf)
                 If lotControl Then
-                    Print(File2, Chr(27) & "V1000" & Chr(27) & "H320" & Chr(27) & "L0202" & Chr(27) & "XSPack ID" & vbCrLf)
-                    Print(File2, Chr(27) & "V1000" & Chr(27) & "H350" & Chr(27) & "BQ3009,1" & lotNO & vbCrLf)
-                    Print(File2, Chr(27) & "V1950" & Chr(27) & "H330" & Chr(27) & "L0404" & Chr(27) & "XB1" & lotNO & vbCrLf)
+                    Print(lblprint, Chr(27) & "V1000" & Chr(27) & "H320" & Chr(27) & "L0202" & Chr(27) & "XSPack ID" & vbCrLf)
+                    Print(lblprint, Chr(27) & "V1000" & Chr(27) & "H350" & Chr(27) & "BQ3009,1" & Trim(lotNO) & vbCrLf)
+                    Print(lblprint, Chr(27) & "V1950" & Chr(27) & "H330" & Chr(27) & "L0404" & Chr(27) & "XB1" & Trim(lotNO) & vbCrLf)
                 End If
-                Print(File2, Chr(27) & "Q1" & vbCrLf)
-                Print(File2, Chr(27) & "Z" & vbCrLf)
+                Print(lblprint, Chr(27) & "Q1" & vbCrLf)
+                Print(lblprint, Chr(27) & "Z" & vbCrLf)
                 loopcount = loopcount - 1
             Loop
             packsRow = packsRow + 1
-            FileClose(File2)
+            FileClose(lblprint)
 
             Dim strTemp As String = Environment.GetEnvironmentVariable("temp")
             'Dim strTemp As String = Application.StartupPath

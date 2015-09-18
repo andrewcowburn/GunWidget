@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.lawson.com/GLUtilities/LoadAccountingRules" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.lawson.com/GLUtilities" xmlns:lws="http://lawson.com/ws/credentials" xmlns:ns1="http://schemas.lawson.com/GLUtilities/Average_Cost_Adjust" xmlns:ns3="http://lawson.com/ws/transports/grid" name="GLUtilitiesService" targetNamespace="http://schemas.lawson.com/GLUtilities" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns:average_cost_adjust="http://schemas.lawson.com/GLUtilities/Average_Cost_Adjust" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/GLUtilities/Average_Cost_Adjust">
+      <xsd:annotation>
+        <xsd:documentation>Program: CAS370</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="Average_Cost_Adjust" type="average_cost_adjust:Average_Cost_AdjustType" />
+      <xsd:complexType name="Average_Cost_AdjustType">
+        <xsd:sequence>
+          <xsd:element name="CAS370" type="average_cost_adjust:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="Facility">
+            <xsd:annotation>
+              <xsd:documentation>Facility
+The field indicates the facility used.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="ItemNumber">
+            <xsd:annotation>
+              <xsd:documentation>Item number
+The field indicates the item number (for Maintenance, the item number or equipment number), which is a unique ID for an individual item.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="15" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="AverageCost">
+            <xsd:annotation>
+              <xsd:documentation>Average cost
+The field indicates the average cost saved per item/facility in the local currency.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="19" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Average_Cost_AdjustResponse" type="average_cost_adjust:Average_Cost_AdjustResponseType" />
+      <xsd:complexType name="Average_Cost_AdjustResponseType">
+        <xsd:sequence>
+          <xsd:element name="CAS370" type="average_cost_adjust:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:loadaccountingrules="http://schemas.lawson.com/GLUtilities/LoadAccountingRules" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/GLUtilities/LoadAccountingRules">
+      <xsd:annotation>
+        <xsd:documentation>Program: CRS395</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="LoadAccountingRules" type="loadaccountingrules:LoadAccountingRulesType" />
+      <xsd:complexType name="LoadAccountingRulesType">
+        <xsd:sequence>
+          <xsd:element name="CRS395" type="loadaccountingrules:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="AccountingDimension1" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Accounting dimension 1
+The field indicates an accounting identity in an accounting dimension.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AccountingDimension2" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Accounting dimension 2
+The field indicates an accounting identity in an accounting dimension.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AccountingDimension3" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Accounting dimension 3
+The field indicates an accounting identity in an accounting dimension.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AccountingDimension4" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Accounting dimension 4
+The field indicates an accounting identity in an accounting dimension.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AccountingDimension5" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Accounting dimension 5
+The field indicates an accounting identity in an accounting dimension.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AccountingDimension6" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Accounting dimension 6
+The field indicates an accounting identity in an accounting dimension.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="AccountingDimension7" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Accounting dimension 7
+The field indicates an accounting identity in an accounting dimension.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="8" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DynamicValueFromSelectedObject2" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Dynamic value from selected object
+The field indicates the object (data element) from which a value should be retrieved.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DynamicValueFromSelectedObject3" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Dynamic value from selected object
+The field indicates the object (data element) from which a value should be retrieved.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DynamicValueFromSelectedObject4" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Dynamic value from selected object
+The field indicates the object (data element) from which a value should be retrieved.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DynamicValueFromSelectedObject5" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Dynamic value from selected object
+The field indicates the object (data element) from which a value should be retrieved.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DynamicValueFromSelectedObject6" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Dynamic value from selected object
+The field indicates the object (data element) from which a value should be retrieved.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DynamicValueFromSelectedObject7" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Dynamic value from selected object
+The field indicates the object (data element) from which a value should be retrieved.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="AccountingEvent">
+            <xsd:annotation>
+              <xsd:documentation>Accounting event
+The field indicates an accounting event and is used when one or more account entries are to be generated.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="4" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="AccountingType">
+            <xsd:annotation>
+              <xsd:documentation>Accounting type
+The field indicates the accounting type which constitutes a single account entry within an accounting transaction.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="4" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="FromDate">
+            <xsd:annotation>
+              <xsd:documentation>From date
+The field indicates the start date for the system period.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="6" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Division">
+            <xsd:annotation>
+              <xsd:documentation>Division
+The field indicates a division. This is an identity for a legal unit within a company group.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="LoadAccountingRulesResponse" type="loadaccountingrules:LoadAccountingRulesResponseType" />
+      <xsd:complexType name="LoadAccountingRulesResponseType">
+        <xsd:sequence>
+          <xsd:element name="CRS395" type="loadaccountingrules:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://lawson.com/ws/credentials">
+      <xsd:element name="lws">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="user" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+            <xsd:element minOccurs="0" name="company" type="xsd:integer" />
+            <xsd:element minOccurs="0" name="division" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="LoadAccountingRules">
+    <wsdl:part name="LoadAccountingRules" element="ns2:LoadAccountingRules" />
+  </wsdl:message>
+  <wsdl:message name="LwsHeader001">
+    <wsdl:part name="LwsHeader" element="lws:lws" />
+  </wsdl:message>
+  <wsdl:message name="Average_Cost_Adjust">
+    <wsdl:part name="Average_Cost_Adjust" element="ns1:Average_Cost_Adjust" />
+  </wsdl:message>
+  <wsdl:message name="LoadAccountingRulesResponse">
+    <wsdl:part name="LoadAccountingRulesResponse" element="ns2:LoadAccountingRulesResponse" />
+  </wsdl:message>
+  <wsdl:message name="Average_Cost_AdjustResponse">
+    <wsdl:part name="Average_Cost_AdjustResponse" element="ns1:Average_Cost_AdjustResponse" />
+  </wsdl:message>
+  <wsdl:portType name="GLUtilities">
+    <wsdl:operation name="Average_Cost_Adjust">
+      <wsdl:input name="Average_Cost_Adjust" message="tns:Average_Cost_Adjust" />
+      <wsdl:output name="Average_Cost_AdjustResponse" message="tns:Average_Cost_AdjustResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="LoadAccountingRules">
+      <wsdl:input name="LoadAccountingRules" message="tns:LoadAccountingRules" />
+      <wsdl:output name="LoadAccountingRulesResponse" message="tns:LoadAccountingRulesResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GLUtilitiesServiceSoapBinding" type="tns:GLUtilities">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Average_Cost_Adjust">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="Average_Cost_Adjust">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="Average_Cost_AdjustResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoadAccountingRules">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="LoadAccountingRules">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="LoadAccountingRulesResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GLUtilitiesService">
+    <wsdl:port name="GLUtilitiesPort" binding="tns:GLUtilitiesServiceSoapBinding">
+      <soap:address location="http://m3be.gunnersens.com.au:21007/mws-ws/services/GLUtilities" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

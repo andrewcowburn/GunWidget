@@ -45,6 +45,8 @@ Partial Class frmPO
         Me.tsbNewRun = New System.Windows.Forms.ToolStripButton()
         Me.ttbuttons = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnCreateNewDD = New System.Windows.Forms.Button()
+        Me.txtFreightCharge = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.dgvItems, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvRun, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
@@ -102,7 +104,7 @@ Partial Class frmPO
         '
         Me.lblWarehouseID.AutoSize = True
         Me.lblWarehouseID.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWarehouseID.Location = New System.Drawing.Point(217, 89)
+        Me.lblWarehouseID.Location = New System.Drawing.Point(217, 90)
         Me.lblWarehouseID.Name = "lblWarehouseID"
         Me.lblWarehouseID.Size = New System.Drawing.Size(49, 13)
         Me.lblWarehouseID.TabIndex = 8
@@ -144,6 +146,7 @@ Partial Class frmPO
         Me.dgvItems.AllowUserToDeleteRows = False
         Me.dgvItems.AllowUserToResizeColumns = False
         Me.dgvItems.AllowUserToResizeRows = False
+        Me.dgvItems.BackgroundColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -161,7 +164,7 @@ Partial Class frmPO
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvItems.DefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvItems.Location = New System.Drawing.Point(21, 165)
+        Me.dgvItems.Location = New System.Drawing.Point(21, 169)
         Me.dgvItems.Name = "dgvItems"
         Me.dgvItems.Size = New System.Drawing.Size(933, 211)
         Me.dgvItems.TabIndex = 13
@@ -170,7 +173,7 @@ Partial Class frmPO
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(18, 147)
+        Me.Label7.Location = New System.Drawing.Point(18, 151)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(65, 13)
         Me.Label7.TabIndex = 15
@@ -182,6 +185,7 @@ Partial Class frmPO
         Me.dgvRun.AllowUserToDeleteRows = False
         Me.dgvRun.AllowUserToResizeColumns = False
         Me.dgvRun.AllowUserToResizeRows = False
+        Me.dgvRun.BackgroundColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -199,7 +203,7 @@ Partial Class frmPO
         DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvRun.DefaultCellStyle = DataGridViewCellStyle4
-        Me.dgvRun.Location = New System.Drawing.Point(21, 420)
+        Me.dgvRun.Location = New System.Drawing.Point(21, 424)
         Me.dgvRun.Name = "dgvRun"
         Me.dgvRun.ReadOnly = True
         DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
@@ -217,7 +221,7 @@ Partial Class frmPO
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(18, 398)
+        Me.Label3.Location = New System.Drawing.Point(18, 402)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(104, 13)
         Me.Label3.TabIndex = 17
@@ -244,7 +248,8 @@ Partial Class frmPO
         '
         'btnCreateNewDD
         '
-        Me.btnCreateNewDD.Location = New System.Drawing.Point(21, 637)
+        Me.btnCreateNewDD.Enabled = False
+        Me.btnCreateNewDD.Location = New System.Drawing.Point(21, 641)
         Me.btnCreateNewDD.Name = "btnCreateNewDD"
         Me.btnCreateNewDD.Size = New System.Drawing.Size(156, 33)
         Me.btnCreateNewDD.TabIndex = 20
@@ -252,13 +257,33 @@ Partial Class frmPO
         Me.ttbuttons.SetToolTip(Me.btnCreateNewDD, "Create new delivery docket (Ctrl+N)")
         Me.btnCreateNewDD.UseVisualStyleBackColor = True
         '
+        'txtFreightCharge
+        '
+        Me.txtFreightCharge.Location = New System.Drawing.Point(220, 114)
+        Me.txtFreightCharge.Name = "txtFreightCharge"
+        Me.txtFreightCharge.Size = New System.Drawing.Size(80, 20)
+        Me.txtFreightCharge.TabIndex = 21
+        Me.txtFreightCharge.Visible = False
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(18, 117)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(101, 13)
+        Me.Label1.TabIndex = 23
+        Me.Label1.Text = "Delivery Charge:"
+        '
         'frmPO
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(1034, 730)
+        Me.ClientSize = New System.Drawing.Size(1034, 681)
         Me.ControlBox = False
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.txtFreightCharge)
         Me.Controls.Add(Me.btnCreateNewDD)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.Label3)
@@ -308,4 +333,6 @@ Partial Class frmPO
     Friend WithEvents tsbNewRun As System.Windows.Forms.ToolStripButton
     Friend WithEvents ttbuttons As System.Windows.Forms.ToolTip
     Friend WithEvents btnCreateNewDD As System.Windows.Forms.Button
+    Friend WithEvents txtFreightCharge As System.Windows.Forms.TextBox
+    Friend WithEvents Label1 As System.Windows.Forms.Label
 End Class

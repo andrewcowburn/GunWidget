@@ -27,7 +27,6 @@ Public Class frmPO
     Dim supPackID As String
     Dim attributeValue As String
     Dim lotControl As Boolean = False
-    Dim attributes As Boolean = False
     Public attributeTable As DataTable = New DataTable("Attribute Table")
     Dim runNumber As Integer
     Private frmAttEnt As frmAttributeEntry
@@ -76,7 +75,6 @@ Public Class frmPO
     Dim SUDO As String
     Dim SUNO As String
     Dim DNDT As String
-    Public Shared parFrm
 
 
     'dim global constructors for passing values to the form from parent form 
@@ -115,7 +113,6 @@ Public Class frmPO
         Me.Text = igType & " " & Me.poNumber 'set the title of the form to the current PO number being edited/created
 
         connectionString = M3Svr.ConnString(frmMain.grid)
-        parFrm = Me.ParentForm
 
         'relevant sql statment, determined by whether the number entered was PO, DO or Container
         If igType = "PO" Then
@@ -174,7 +171,7 @@ Public Class frmPO
             lblCreditorID.Text = ds.Tables(0).Rows(0)("ICWHLO")
             SUDO = ds.Tables(0).Rows(0)("ICSUDO")
             SUNO = ds.Tables(0).Rows(0)("ICSUNO")
-            DNDT = ds.Tables(0).Rows(0)("ICSMDT")
+            DNDT = ds.Tables(0).Rows(0)("ICTRDT")
         End If
 
         'fill the item grid
@@ -271,7 +268,7 @@ Public Class frmPO
 
             ' apportion delivery charge across lines (weighted average based on cost) for Distribution Orders
             If igType = "DO" Then
-                'AppDelCharge()
+                AppDelCharge()
             End If
 
             'set the run number 
@@ -283,8 +280,8 @@ Public Class frmPO
                     frmAttEnt = New frmAttributeEntry(Me.attributeTable, supPackID, False, ds2, runNumber, igType)
                     If attributeValue.Contains("IX") Then
                         If frmAttEnt.IsDisposed = False Then
-                            frmAttEnt.MdiParent = Me.ParentForm
                             frmAttEnt.Show()
+                            frmAttEnt.MdiParent = frmMain
                             Me.Close()
                         End If
                     End If
@@ -298,19 +295,19 @@ Public Class frmPO
                 If Not totItemQty = 0 Then
                     frmAttEnt = New frmAttributeEntry(Me.attributeTable, supPackID, False, ds2, runNumber, igType)
                     If frmAttEnt.IsDisposed = False Then
-                        frmAttEnt.MdiParent = Me.ParentForm
                         frmAttEnt.Show()
+                        frmAttEnt.MdiParent = frmMain
                         Me.Close()
                     End If
                 Else
                     MessageBox.Show("You have not entered any items, enter items to be received.")
                 End If
-            ElseIf attributeValue = "STANDARD" Or attributeValue = "VALUEADD" Then ' if the item is a standard product handle the data entry (i.e there is o data to enter)
+            ElseIf attributeValue = "STANDARD" Then ' if the item is a standard product handle the data entry (i.e there is o data to enter)
                 If Not totItemQty = 0 And Not totPackQty = 0 Then
                     frmAttEnt = New frmAttributeEntry(Me.attributeTable, supPackID, False, ds2, runNumber, igType)
                     If frmAttEnt.IsDisposed = False Then
-                        frmAttEnt.MdiParent = Me.ParentForm
                         frmAttEnt.Show()
+                        frmAttEnt.MdiParent = frmMain
                         Me.Close()
                     End If
                 Else
@@ -379,8 +376,6 @@ Public Class frmPO
                                             Else
                                                 tsbNewRun.Enabled = False
                                                 btnCreateNewDD.Enabled = False
-                                                dgvItems.EditingControl.Text = ""
-                                                e.Cancel = True
                                             End If
                                         End If
                                     Else
@@ -681,21 +676,15 @@ Public Class frmPO
                         success = MHS850()
                         If success Then
                             arrNewStock = GetAvgCostandStock(itemNumber, lblCreditorID.Text)
-                            'WSAverageCostAdjust(ds.Tables("Packs").Rows(i)("AppCharge"))
-                            FinishUpAndPrintLabels(i)
-                        Else
-                            Me.Cursor = Cursors.Arrow
-                            frmProgress.Close()
+                            WSAverageCostAdjust(ds.Tables("Packs").Rows(i)("AppCharge"))
+                            FinishUpAndPrintLabels()
                         End If
                     Else
+
                         If attributeValue.Contains("IX") Then
                             lotControl = True
-                            attributes = True
                             tally = ds.Tables("Packs").Rows(packsRow)("TALLY")
                             wrkCAWE = ds.Tables("Packs").Rows(packsRow)("CATCHWEIGHT")
-                        ElseIf attributeValue = "VALUEADD" Then
-                            lotControl = True
-                            attributes = False
                         Else
                             lotControl = False
                         End If
@@ -719,49 +708,45 @@ Public Class frmPO
                                 If lotControl Then ' the below only runs for lotcontrolled packs (MIXED or FIXED)
                                     success = MMS235MI()
                                     If success Then
-                                        If attributes Then
-                                            success = ATS101MI()
-                                            If success Then
-                                                If attributeValue.Contains("MIXED") Then
-                                                    success = CUSTEXTMI()
+                                        success = ATS101MI()
+                                        If success Then
+                                            If attributeValue.Contains("MIXED") Then
+                                                success = CUSTEXTMI()
+                                                If success Then
+                                                    success = WSCATCHWEIGHT()
                                                     If success Then
-                                                        success = WSCATCHWEIGHT()
-                                                        If success Then
-                                                            PPS320()
-                                                            FinishUpAndPrintLabels(i)
-                                                        Else
-                                                            Me.Cursor = Cursors.Arrow
-                                                            frmProgress.Close()
-                                                        End If
+                                                        PPS320()
+                                                        FinishUpAndPrintLabels()
                                                     Else
                                                         Me.Cursor = Cursors.Arrow
                                                         frmProgress.Close()
                                                     End If
                                                 Else
-                                                    FinishUpAndPrintLabels(i)
+                                                    Me.Cursor = Cursors.Arrow
+                                                    frmProgress.Close()
                                                 End If
                                             Else
-                                                Me.Cursor = Cursors.Arrow
-                                                frmProgress.Close()
+                                                FinishUpAndPrintLabels()
                                             End If
                                         Else
-                                            FinishUpAndPrintLabels(i)
+                                            Me.Cursor = Cursors.Arrow
+                                            frmProgress.Close()
                                         End If
                                     Else
                                         Me.Cursor = Cursors.Arrow
                                         frmProgress.Close()
                                     End If
-                                    Else
-                                    FinishUpAndPrintLabels(i)
-                                    End If
                                 Else
-                                    Me.Cursor = Cursors.Arrow
-                                    frmProgress.Close()
+                                    FinishUpAndPrintLabels()
                                 End If
                             Else
                                 Me.Cursor = Cursors.Arrow
                                 frmProgress.Close()
                             End If
+                        Else
+                            Me.Cursor = Cursors.Arrow
+                            frmProgress.Close()
+                        End If
                     End If
 
                 Else
@@ -786,7 +771,7 @@ Public Class frmPO
         End Try
     End Function
 
-    Private Sub FinishUpAndPrintLabels(runLineNo As Integer)
+    Private Sub FinishUpAndPrintLabels()
         'add columns to the dataset table which contains the details of each pack being posted for the purpose of saving the data
         If Not ds.Tables("Packs").Columns.Contains("perPack") Then
             ds.Tables("Packs").Columns.Add("perPack")
@@ -803,13 +788,13 @@ Public Class frmPO
         'print the labels
         If ds2.Tables(0).Columns.Contains("LabelQty") Then
             For z = 0 To qtyToPrint - 1
-                PrintLabels(rowNumber, runLineNo)
+                PrintLabels(rowNumber)
                 packsRow = packsRow - 1
                 System.Threading.Thread.Sleep(1500)
             Next
             packsRow = packsRow + 1
         Else
-            PrintLabels(rowNumber, runLineNo)
+            PrintLabels(rowNumber)
         End If
 
 
@@ -1088,7 +1073,7 @@ Public Class frmPO
             If e.ColumnIndex = 0 Then
                 frmAttEnt = New frmAttributeEntry(Me.attributeTable, supPackID, True, ds2, poNumber.ToString & dgvRun.Rows(e.RowIndex).Cells("RUN_NO").Value.ToString, igType)
                 frmAttEnt.Show()
-                frmAttEnt.MdiParent = Me.ParentForm
+                frmAttEnt.MdiParent = frmMain
             ElseIf e.ColumnIndex = 1 Then 'post the run to m3
                 Dim post = MessageBox.Show("You are about to post this run to M3, this cannot be undone, do you wish to proceed?", "Post Run?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                 If post = 6 Then
@@ -1454,7 +1439,7 @@ Public Class frmPO
         Next
     End Function
 
-    Public Function PrintLabels(ByVal line As Integer, runLineNo As Integer)
+    Public Function PrintLabels(ByVal line As Integer)
         Dim warehouseID As String
         Dim branch As String
         Dim ProductID As String
@@ -1482,11 +1467,9 @@ Public Class frmPO
         Dim strRecDate = intday & intMonth & intYear
         warehouseID = Trim(ds2.Tables(0).Rows(line)("IBWHLO"))
         branch = warehouseID
-
-        'If Strings.Left(warehouseID, 1) = "9" Then
-        '    warehouseID = "900"
-        'End If
-
+        If Strings.Left(warehouseID, 1) = "9" Then
+            warehouseID = "900"
+        End If
         ProductID = Trim(ds2.Tables("Product Table PO").Rows(line)("MMITNO"))
         Desc = ds2.Tables("Product Table PO").Rows(line)("MMITDS")
 
@@ -1500,14 +1483,14 @@ Public Class frmPO
         Dim File2 = FreeFile()
         ChDir(Environment.GetEnvironmentVariable("temp"))
 
-        attributeValue = ds.Tables("Packs").Rows(runLineNo)("PACKTYPE")
+        attributeValue = ds.Tables("Packs").Rows(packsRow)("PACKTYPE")
 
         If attributeValue.ToString.Contains("FIXED") Or attributeValue.ToString.Contains("MIXED") Then
             lotControl = True
             loopcount = 1
             If Not igType = "DO" Then
-                tally = ds.Tables("Packs").Rows(runLineNo)("TALLY")
-                wrkCAWE = ds.Tables("Packs").Rows(runLineNo)("CATCHWEIGHT")
+                tally = ds.Tables("Packs").Rows(packsRow)("TALLY")
+                wrkCAWE = ds.Tables("Packs").Rows(packsRow)("CATCHWEIGHT")
             Else
                 tally = GetTally(itemNumber, lotNO)
                 wrkCAWE = GetCatchWeight(itemNumber, lotNO)
@@ -1515,20 +1498,20 @@ Public Class frmPO
 
             perpack = wrkCAWE
 
-            ds.Tables("Packs").Rows(runLineNo)("perPack") = perpack
-            ds.Tables("Packs").Rows(runLineNo)("shortPack") = shortpack
-            ds.Tables("Packs").Rows(runLineNo)("lotNo") = lotNO
-            ds.Tables("Packs").Rows(runLineNo)("putAway") = putAway
+            ds.Tables("Packs").Rows(packsRow)("perPack") = perpack
+            ds.Tables("Packs").Rows(packsRow)("shortPack") = shortpack
+            ds.Tables("Packs").Rows(packsRow)("lotNo") = lotNO
+            ds.Tables("Packs").Rows(packsRow)("putAway") = putAway
 
         Else
             lotControl = False
 
             If attributeValue = "BATCH" Then
                 loopcount = 1
-                perpack = ds.Tables("Packs").Rows(runLineNo)("ITEMQTY") / ds.Tables("Packs").Rows(runLineNo)("PACKQTY")
+                perpack = ds.Tables("Packs").Rows(packsRow)("ITEMQTY") / ds.Tables("Packs").Rows(packsRow)("PACKQTY")
             Else
-                loopcount = ds.Tables("Packs").Rows(runLineNo)("PACKQTY")
-                itemQty = ds.Tables("Packs").Rows(runLineNo)("ITEMQTY")
+                loopcount = ds.Tables("Packs").Rows(packsRow)("PACKQTY")
+                itemQty = ds.Tables("Packs").Rows(packsRow)("ITEMQTY")
 
                 perpack = itemQty / loopcount
                 If Not itemQty Mod loopcount = 0 Then
@@ -1541,10 +1524,10 @@ Public Class frmPO
 
 
 
-            ds.Tables("Packs").Rows(runLineNo)("perPack") = perpack
-            ds.Tables("Packs").Rows(runLineNo)("shortPack") = shortpack
-            ds.Tables("Packs").Rows(runLineNo)("lotNo") = lotNO
-            ds.Tables("Packs").Rows(runLineNo)("putAway") = putAway
+            ds.Tables("Packs").Rows(packsRow)("perPack") = perpack
+            ds.Tables("Packs").Rows(packsRow)("shortPack") = shortpack
+            ds.Tables("Packs").Rows(packsRow)("lotNo") = lotNO
+            ds.Tables("Packs").Rows(packsRow)("putAway") = putAway
         End If
 
         connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect " & _
@@ -1556,16 +1539,10 @@ Public Class frmPO
         connection = New SqlConnection(connectionString)
 
         Try
-            If Not ds2.Tables.Contains("LblPrint") Then
-                ds2.Tables.Add("LblPrint")
-            Else
-                ds2.Tables("LblPrint").Clear()
-            End If
-
             connection.Open()
             command = New SqlCommand(sql, connection)
             adapter.SelectCommand = command
-            adapter.Fill(ds2.Tables("LblPrint"))
+            adapter.Fill(ds2.Tables.Add("LblPrint"))
             adapter.Dispose()
             command.Dispose()
             connection.Close()
@@ -1574,30 +1551,13 @@ Public Class frmPO
             MsgBox(ex.ToString)
         End Try
 
-
-
         If ds2.Tables("LblPrint").Rows.Count > 0 Then
+            printerport = Trim((ds2.Tables("LblPrint").Rows(0)("Printer_Port")))
+            printerid = Trim(ds2.Tables("LblPrint").Rows(0)("Printer_IP"))
+            login = Trim(ds2.Tables("LblPrint").Rows(0)("Login"))
+            pw = Trim(ds2.Tables("LblPrint").Rows(0)("Password"))
 
-            Select Case warehouseID
-                Case "920"
-                    printerport = "d1prn"
-                    printerid = "192.168.18.238"
-                    login = "root"
-                    pw = "NewChair4JAC"
-                Case "930"
-                    printerport = "d1prn"
-                    printerid = "192.168.19.238"
-                    login = "root"
-                    pw = "NewChair4JAC"
-                Case Else
-                    printerport = Trim((ds2.Tables("LblPrint").Rows(0)("Printer_Port")))
-                    printerid = Trim(ds2.Tables("LblPrint").Rows(0)("Printer_IP"))
-                    login = Trim(ds2.Tables("LblPrint").Rows(0)("Login"))
-                    pw = Trim(ds2.Tables("LblPrint").Rows(0)("Password"))
-
-                    ds2.Tables.Remove("LBLPrint")
-            End Select
-
+            ds2.Tables.Remove("LBLPrint")
 
             barcode = GetBarcode(ProductID)
 
@@ -1665,11 +1625,6 @@ Public Class frmPO
                 Print(File2, Chr(27) & "V120" & Chr(27) & "H731" & Chr(27) & "CC2" & Chr(27) & "PY050" & vbCrLf)
                 Print(File2, Chr(27) & "V100" & Chr(27) & "H426" & Chr(27) & "L0202" & Chr(27) & "XMGUNNERSEN" & vbCrLf)
 
-                If igType = "DO" Then
-                    Print(File2, Chr(27) & "V650" & Chr(27) & "H146" & Chr(27) & "L0205" & Chr(27) & "XMD/O" & vbCrLf)
-                End If
-
-
                 Select Case typeFlag
                     Case "0"
                         ' Don't know
@@ -1719,14 +1674,8 @@ Public Class frmPO
                 'Print(File2, Chr(27) & "V750" & Chr(27) & "H680" & Chr(27) & "L0203" & Chr(27) & "XM" & bin2 & vbCrLf)
                 ' Print(File2, Chr(27) & "V1050" & Chr(27) & "H400" & Chr(27) & "L0203" & Chr(27) & "XM" & bin3 & vbcrlf) ' bin 3 is facings
                 Print(File2, Chr(27) & "V2160" & Chr(27) & "H540" & Chr(27) & "L0203" & Chr(27) & "XM" & perpack & vbCrLf)
-
-                If igType = "DO" Then
-                    Print(File2, Chr(27) & "V950" & Chr(27) & "H146" & Chr(27) & "L0205" & Chr(27) & "XMD/O" & vbCrLf)
-                Else
-                    Print(File2, Chr(27) & "V950" & Chr(27) & "H146" & Chr(27) & "L0202" & Chr(27) & "XSPutAway Number: " & putAway & vbCrLf)
-                    Print(File2, Chr(27) & "V950" & Chr(27) & "H116" & Chr(27) & "BT101030103" & Chr(27) & "BW03100*" & putAway & "*" & vbCrLf)
-                End If
-
+                Print(File2, Chr(27) & "V950" & Chr(27) & "H146" & Chr(27) & "L0202" & Chr(27) & "XSPutAway Number: " & putAway & vbCrLf)
+                Print(File2, Chr(27) & "V950" & Chr(27) & "H116" & Chr(27) & "BT101030103" & Chr(27) & "BW03100*" & putAway & "*" & vbCrLf)
                 Print(File2, Chr(27) & "V2000" & Chr(27) & "H406" & Chr(27) & "L0202" & Chr(27) & "XSProduct ID" & vbCrLf)
                 Print(File2, Chr(27) & "V2000" & Chr(27) & "H376" & Chr(27) & "BQ3015,1" & Trim(barcode) & vbCrLf)
                 Print(File2, Chr(27) & "V2000" & Chr(27) & "H36" & Chr(27) & "XU" & Trim(barcode) & vbCrLf)
@@ -1869,7 +1818,7 @@ Public Class frmPO
 
         rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, Nothing)
         If rc <> 0 Then
-            MvxSock.ShowLastError(sid, "PPS001 - Error Occured: ")
+            MvxSock.ShowLastError(sid, "Error Occured: ")
         End If
 
         todayDate = Date.Today().ToString("yyyyMMdd")
@@ -1881,7 +1830,7 @@ Public Class frmPO
             catchWeight = ds.Tables("Packs").Rows(i)("CATCHWEIGHT")
             wrkCAWE = catchWeight
             tally = ds.Tables("Packs").Rows(i)("Tally")
-        ElseIf attributeValue = "BATCH" Or attributeValue = "EXPIRY" Then
+        ElseIf Not attributeValue = "STANDARD" Then
             lotNO = ds.Tables("Packs").Rows(i)("Tally")
         End If
 
@@ -1916,10 +1865,10 @@ Public Class frmPO
         If attributeValue.Contains("IX") Then
             MvxSock.SetField(sid, "CAWE", wrkCAWE)
             MvxSock.SetField(sid, "RVQA", 1)
-            'lotControl = True
+            lotControl = True
         Else
             Select Case attributeValue
-                Case "STANDARD", "VALUEADD"
+                Case "STANDARD"
                     MvxSock.SetField(sid, "CAWE", wrkCAWE)
                     MvxSock.SetField(sid, "RVQA", itemQty)
                 Case "BATCH"
@@ -1932,14 +1881,14 @@ Public Class frmPO
                     MvxSock.SetField(sid, "BANO", lotNO)
                     MvxSock.SetField(sid, "PRDT", lotNO)
             End Select
-            'lotControl = False
+            lotControl = False
         End If
 
 
         MvxSock.SetTrimFields(sid, 0)  ' Do not trim trailing spaces
         rc = MvxSock.Access(sid, APIOpr)
         If rc <> 0 Then
-            MvxSock.ShowLastError(sid, "PPS001 - Error Occurred: ")
+            MvxSock.ShowLastError(sid, " PPS001MI - Error Occurred: ")
         End If
 
         If rc = 0 Then
@@ -1960,7 +1909,7 @@ Public Class frmPO
 
         rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, Nothing)
         If rc <> 0 Then
-            MvxSock.ShowLastError(sid, "ZPP363 - Error Occured: ")
+            MvxSock.ShowLastError(sid, "Error Occured: ")
         End If
 
         MvxSock.SetField(sid, "CONO", "100")
@@ -2013,14 +1962,14 @@ Public Class frmPO
     Private Function MHS850()
         Server = "M3BE"
         Port = M3Svr.Port(frmMain.grid)
-        UserID = "30andrewc"
-        PWD = "k1rkh4m"
+        UserID = "DTAMIGR"
+        PWD = "Q190E87AG"
         APIName = "MHS850MI"
         APIOpr = "AddDOReceipt"
 
         rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, Nothing)
         If rc <> 0 Then
-            MvxSock.ShowLastError(sid, "MHS850 - Error Occured: ")
+            MvxSock.ShowLastError(sid, "Error Occured: ")
         End If
 
         Dim WHLO = Trim(ds2.Tables(0).Rows(rowNumber)("IBPNLI"))
@@ -2033,7 +1982,7 @@ Public Class frmPO
             itemQty = ds.Tables("Packs").Rows(i)("ITEMQTY")
         End If
 
-        Dim RIDI = ds2.Tables(0).Rows(i)("OQDLIX").ToString
+        Dim RIDI = ds2.Tables(0).Rows(i)("OQDLIX")
         lotNO = ds2.Tables(0).Rows(i)("MRBANO")
         catchWeight = GetCatchWeight(itemNumber, lotNO)
         Dim doubCatchWeight = Math.Round(Convert.ToDouble(catchWeight), 2)
@@ -2045,13 +1994,13 @@ Public Class frmPO
         MvxSock.SetField(sid, "E065", "GUN")
         MvxSock.SetField(sid, "TWHL", lblWarehouseID.Text)
         MvxSock.SetField(sid, "ITNO", itemNumber)
-        MvxSock.SetField(sid, "WHSL", "DORECEIVE")
+        MvxSock.SetField(sid, "WHSL", "RECEIVING")
         MvxSock.SetField(sid, "QTY", itemQty)
         MvxSock.SetField(sid, "RIDN", poNumber)
         MvxSock.SetField(sid, "RIDL", intLineNo)
         MvxSock.SetField(sid, "RIDI", RIDI)
-        'MvxSock.SetField(sid, "BANO", lotNO)
-        'MvxSock.SetField(sid, "CAWE", doubCatchWeight)
+        MvxSock.SetField(sid, "BANO", lotNO)
+        MvxSock.SetField(sid, "CAWE", doubCatchWeight)
 
 
         MvxSock.SetTrimFields(sid, 0)  ' Do not trim trailing spaces
@@ -2153,7 +2102,7 @@ Public Class frmPO
 
         rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, Nothing)
         If rc <> 0 Then
-            MvxSock.ShowLastError(sid, "PPS320 - Error Occured: ")
+            MvxSock.ShowLastError(sid, "Error Occured: ")
         End If
 
         MvxSock.SetField(sid, "REPN", putAway)
@@ -2222,9 +2171,6 @@ Public Class frmPO
         Next
 
         For c = 0 To dgvItems.RowCount - 1
-            'If dgvItems.Rows(c).Cells("MRTRQT").Value Then
-
-            'End If
             appCostInd.Add(appCost(c) / dgvItems.Rows(c).Cells("MRTRQT").Value)
             dgvItems.Rows(c).Cells("AppCharge").Value = appCostInd(c) + dgvItems.Rows(c).Cells("MRTRPR").Value
         Next
@@ -2329,7 +2275,7 @@ Public Class frmPO
 
         rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, Nothing)
         If rc <> 0 Then
-            MvxSock.ShowLastError(sid, "PPS200 - Error Occured: ")
+            MvxSock.ShowLastError(sid, "Error Occured: ")
         End If
 
         MvxSock.SetField(sid, "PUNO", PONo)

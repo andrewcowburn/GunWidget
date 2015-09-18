@@ -2,6 +2,7 @@
 Imports Lawson.M3.MvxSock
 
 Public Class frmAttributeEntry
+    Dim frmMn As New frmMain
     Private _dt As DataTable
     Private _isThisAnEdit As String
     Private _supPackID As String
@@ -30,9 +31,13 @@ Public Class frmAttributeEntry
     Dim qtyTotal As Integer
     Dim LINE_ID As String
     Dim po As String
+    Dim co As String
+    Dim distro As String
     Dim lineNumber As String
     Dim duplicatePacks As Integer
     Dim itemQty As Integer
+    Dim labQty As Integer
+    Dim appCharge As Decimal
     Dim packQty As Integer
     Dim attributeValue As String
     Dim lotcontrol As Integer
@@ -48,6 +53,7 @@ Public Class frmAttributeEntry
     Dim addCatchTally As Integer = 0
     Dim creation = 0
     Dim ProductName As String
+    Dim itemNumber As String
     Public Shared lineloop As Integer
     Dim clickcmd As Integer
     Dim dtTempAttribute As New DataTable
@@ -63,6 +69,11 @@ Public Class frmAttributeEntry
     Dim dd As New frmInput
     Dim cleanupExit As Boolean = False
     Dim batchNo As String
+    Private _igType As String
+    Dim M3Svr As M3Point.M3Point = New M3Point.M3Point
+    Dim warehouse As String
+    Dim productDesc As String
+    Dim typeFlag As Object
 
 
     Public Property dt As DataTable
@@ -105,8 +116,17 @@ Public Class frmAttributeEntry
             _RUN_NUMBER = value
         End Set
     End Property
+    Public Property igType() As String
+        Get
+            Return _igType
+        End Get
+        Set(value As String)
+            _igType = value
+        End Set
+    End Property
 
-    Public Sub New(ByVal dt As DataTable, ByVal supPackID As String, ByVal isThisAnEdit As Boolean, ByVal dsLineItems As DataSet, ByVal RUN_NUMBER As String)
+
+    Public Sub New(ByVal dt As DataTable, ByVal supPackID As String, ByVal isThisAnEdit As Boolean, ByVal dsLineItems As DataSet, ByVal RUN_NUMBER As String, ByVal igType As String)
         InitializeComponent()
         lblPacks.Location = New Point(Me.Width / 2 - lblPacks.Width, lblPacks.Location.Y)
 
@@ -134,7 +154,7 @@ Public Class frmAttributeEntry
             Me.dsLineItems = dsLineItems
             Me.RUN_NUMBER = RUN_NUMBER
             Me.supPackID = supPackID
-
+            Me.igType = igType
             LoadAttributeTable()
         End If
     End Sub
@@ -155,7 +175,7 @@ Public Class frmAttributeEntry
                         connection.Open()
                         command.ExecuteNonQuery()
                     Catch ex As Exception
-                        MessageBox.Show("here he is")
+                        'MessageBox.Show("here he is")
                     End Try
                 Next
                 Me.Close()
@@ -173,7 +193,7 @@ Public Class frmAttributeEntry
                             connection.Open()
                             command.ExecuteNonQuery()
                         Catch ex As Exception
-                            MessageBox.Show("here he is")
+                            'MessageBox.Show("here he is")
                         End Try
                     End If
 
@@ -184,7 +204,7 @@ Public Class frmAttributeEntry
                         connection.Open()
                         command.ExecuteNonQuery()
                     Catch ex As Exception
-                        MessageBox.Show("here he is")
+                        'MessageBox.Show("here he is")
                     End Try
                 Next
                 Me.Close()
@@ -201,7 +221,7 @@ Public Class frmAttributeEntry
                 addCatchTally = 1
             End If
 
-            CalcCatchWeight()
+            CalcCatchweight()
 
             dsLineItems.Tables("Attribute Table").Rows(0)("CatchWeight") = catchWeight
             dsLineItems.Tables("Attribute Table").Rows(0)("Tally") = tally
@@ -239,7 +259,7 @@ Public Class frmAttributeEntry
                         End If
                     Else
                         dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the next pack of" & System.Environment.NewLine & ProductName, "", supPackID, False, False)
-                        If not supPackID = "" then
+                        If Not supPackID = "" Then
                             dsLineItems.Tables("Attribute Table").Rows(0)("AEQTY") = supPackID
                             For i = 1 To dsLineItems.Tables("Attribute Table").Rows.Count - 1
                                 dsLineItems.Tables("Attribute Table").Rows(i)("AEQTY") = dsLineItems.Tables("Attribute Original" & lineloop).Rows(i)("AEQTY")
@@ -272,9 +292,15 @@ exitRoutine:
                             deleteRun(po, RUN_NUMBER)
                         End If
                         Me.Close()
-                        frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
+                        If igType = "CO" Then
+                            frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                        Else
+                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                        End If
+
+                        frmPurchaseOrder.MdiParent = frmPO.parFrm
                         frmPurchaseOrder.Show()
-                        frmPurchaseOrder.MdiParent = frmMain
+
                     End If
                 End If
             End If
@@ -318,9 +344,15 @@ tryagain:
                     MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     lineloop = 0
                     Me.Close()
-                    frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
+                    If igType = "CO" Then
+                        frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                    Else
+                        frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                    End If
+
+                    frmPurchaseOrder.MdiParent = frmPO.parFrm
                     frmPurchaseOrder.Show()
-                    frmPurchaseOrder.MdiParent = frmMain
+
                 End If
             End If
         End If
@@ -366,12 +398,12 @@ tryagain:
         End If
     End Sub
 
-   
+
     Public Function LoadAttributeTable()
         Dim dtAttributeOriginal As New DataTable
 
         ' query the M3 database for the product details and fill the dataset, for the purposes of getting the attribute value and handling it accordingly.
-        connectionString = "Data Source=m3db;Initial Catalog=M3FDBTST;Persist Security Info=True;User ID=Query;Password=Query"
+        connectionString = M3Svr.ConnString(frmMain.grid)
         sql = "SELECT * FROM MITMAS WHERE MMITNO = '" & dsLineItems.Tables(0).Rows(lineloop)("IBITNO") & "';"
         connection = New SqlConnection(connectionString)
         Try
@@ -406,13 +438,38 @@ tryagain:
             'the below code deals with a run which is being created.
 
             'Fill variables with data from the relevant dataset
-            subLine = dsLineItems.Tables(0).Rows(lineloop)("IBPNLS")
+
             LINE_ID = Trim(dsLineItems.Tables(0).Rows(lineloop)("IBPUNO")) & dsLineItems.Tables(0).Rows(lineloop)("IBPNLI") & dsLineItems.Tables(0).Rows(lineloop)("IBPNLS")
-            po = Trim(dsLineItems.Tables(0).Rows(lineloop)("IBPUNO"))
-            lineNumber = dsLineItems.Tables(0).Rows(lineloop)("IBPNLI")
+            If igType = "PO" Then
+                po = Trim(dsLineItems.Tables(0).Rows(lineloop)("IBPUNO"))
+                lineNumber = dsLineItems.Tables(0).Rows(lineloop)("IBPNLI")
+                subLine = dsLineItems.Tables(0).Rows(lineloop)("IBPNLS")
+                warehouse = dsLineItems.Tables(0).Rows(lineloop)("IBWHLO")
+
+            ElseIf igType = "CO" Then
+                po = Trim(dsLineItems.Tables(0).Rows(lineloop)("ICPUNO"))
+                co = Trim(dsLineItems.Tables(0).Rows(lineloop)("IBPUNO"))
+                lineNumber = dsLineItems.Tables(0).Rows(lineloop)("ICPNLI")
+                subLine = dsLineItems.Tables(0).Rows(lineloop)("IBPNLS")
+                qtyTotal = dsLineItems.Tables(0).Rows(lineloop)("ICRPQA")
+                warehouse = dsLineItems.Tables(0).Rows(lineloop)("IBWHLO")
+            ElseIf igType = "DO" Then
+                distro = Trim(dsLineItems.Tables(0).Rows(lineloop)("IBPUNO"))
+                po = Trim(dsLineItems.Tables(0).Rows(lineloop)("IBPUNO"))
+                lineNumber = dsLineItems.Tables(0).Rows(lineloop)("IBPNLI")
+                subLine = dsLineItems.Tables(0).Rows(lineloop)("IBPNLS")
+                warehouse = dsLineItems.Tables(0).Rows(lineloop)("IBWHLO")
+            End If
+
+            typeFlag = dsLineItems.Tables(0).Rows(lineloop)("MMEVGR")
+            productDesc = dsLineItems.Tables(0).Rows(lineloop)("MMITDS")
+            itemNumber = dsLineItems.Tables(0).Rows(lineloop)("IBITNO")
             ProductName = dsLineItems.Tables(0).Rows(lineloop)("MMFUDS")
             itemQty = dsLineItems.Tables(0).Rows(lineloop)("Qty Received")
-            qtyTotal = dsLineItems.Tables(0).Rows(lineloop)("IBRVQA")
+            If dsLineItems.Tables(0).Columns.Contains("LabelQty") Then
+                labQty = dsLineItems.Tables(0).Rows(lineloop)("LabelQty")
+                'appCharge = dsLineItems.Tables(0).Rows(lineloop)("AppCharge")
+            End If
             packQty = dsLineItems.Tables(0).Rows(lineloop)("Packs Received")
             lblProduct.Text = ProductName
             remPack = packQty - 1
@@ -421,313 +478,543 @@ tryagain:
                 dsLine.Tables.Add("qtySaved")
             End If
 
-            Select Case attributeValue
-                Case "BATCH"
-                    If lineloop = 0 Then
-                        'write into the Gunnersen database the details of the run
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                        sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
-                        connection = New SqlConnection(connectionString)
-                        Try
-                            command = New SqlCommand(sql, connection)
-                            connection.Open()
-                            command.ExecuteNonQuery()
-                        Catch ex As Exception
-                            MessageBox.Show(ex.ToString)
-                        End Try
+            If igType = "DO" Then
+
+
+                If lineloop = 0 Then
+                    'write into the Gunnersen database the details of the run
+                    connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                    If igType = "PO" Then
+                        sql = "SELECT * FROM LineReceiving WHERE PO = '" & po & lineNumber & subLine & "';"
+                    ElseIf igType = "DO" Then
+                        sql = "SELECT * FROM LineReceiving WHERE PO = '" & distro & lineNumber & subLine & "';"
+                    ElseIf igType = "CO" Then
+                        sql = "SELECT * FROM LineReceiving WHERE PO = '" & co & lineNumber & subLine & "';"
                     End If
 
-                    If itemQty > 0 Then
-                        dd.ShowDialog("Batch Number", "Please enter the batch number for " & System.Environment.NewLine & ProductName, batchNo, batchNo, False, False)
-                        If Not batchNo = "" Then
-                            lblPacks.Text = "Pack number " & lineloop & " of " & packQty
-                            lotcontrol = 1
-                        Else
-                            MessageBox.Show("You have pressed cancel, nothing has been saved.", "Not Saved", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                            cleanupExit = True
-                            GoTo ExitRoutine
-                        End If
-                        'write into the Gunnersen database the details of the line
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                        sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "');"
-                        connection = New SqlConnection(connectionString)
-                        Try
-                            command = New SqlCommand(sql, connection)
-                            connection.Open()
-                            command.ExecuteNonQuery()
-                        Catch ex As Exception
-                            MessageBox.Show(ex.ToString)
-                        End Try
+                    RunSQL(connectionString, sql, "Run List")
 
-                        If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
-                            lineloop = lineloop + 1
-                            LoadAttributeTable()
-                        Else
-                            MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                            lineloop = 0
-                            Me.Close()
-                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
-                            frmPurchaseOrder.Show()
-                            frmPurchaseOrder.MdiParent = frmMain
-                        End If
+                    max = dsLineItems.Tables("Run List").Rows.Count - 1
+                    If max = -1 Then
+                        runNumber = 0
                     Else
-                        If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
-                            lineloop = lineloop + 1
-                            LoadAttributeTable()
-                        Else
-                            MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                            lineloop = 0
-                            Me.Close()
-                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
-                            frmPurchaseOrder.Show()
-                            frmPurchaseOrder.MdiParent = frmMain
-                        End If
+                        runNumber = dsLineItems.Tables("Run List").Rows.Count + 1
                     End If
 
-                Case "EXPIRY"
-                    If lineloop = 0 Then
-                        'write into the Gunnersen database the details of the run
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                        sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
-                        connection = New SqlConnection(connectionString)
-                        Try
-                            command = New SqlCommand(sql, connection)
-                            connection.Open()
-                            command.ExecuteNonQuery()
-                        Catch ex As Exception
-                            MessageBox.Show(ex.ToString)
-                        End Try
-                    End If
+                    connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                    sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & distro & RUN_NUMBER & "','" & RUN_NUMBER & "','" & distro & lineNumber & subLine & "','" & DateTime.Now & "','" & distro & "','" & delDockNO & "');"
+                    connection = New SqlConnection(connectionString)
+                    Try
+                        command = New SqlCommand(sql, connection)
+                        connection.Open()
+                        command.ExecuteNonQuery()
+                    Catch ex As Exception
+                        MessageBox.Show(ex.ToString)
+                    End Try
+                End If
 
-                    If itemQty > 0 Then
-                        dd.ShowDialog("Batch Number", "Please enter the manufactured date for " & System.Environment.NewLine & ProductName, batchNo, batchNo, False, True)
-                        If Not batchNo = "" Then
-                            lblPacks.Text = "Pack number " & lineloop & " of " & packQty
-                            lotcontrol = 1
-                        Else
-                            MessageBox.Show("You have pressed cancel, nothing has been saved.")
-                            cleanupExit = True
-                            GoTo ExitRoutine
-                        End If
-                        Dim expdate As Date = Date.Parse(batchNo)
-                        expdate = expdate.AddYears(2)
-                        batchNo = expdate.ToShortDateString
-                        'write into the Gunnersen database the details of the line
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                        sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "');"
-                        connection = New SqlConnection(connectionString)
-                        Try
-                            command = New SqlCommand(sql, connection)
-                            connection.Open()
-                            command.ExecuteNonQuery()
-                        Catch ex As Exception
-                            MessageBox.Show(ex.ToString)
-                        End Try
+                If itemQty > 0 Then
 
-                        If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
-                            lineloop = lineloop + 1
-                            LoadAttributeTable()
-                        Else
-                            MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                            lineloop = 0
-                            Me.Close()
-                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
-                            frmPurchaseOrder.Show()
-                            frmPurchaseOrder.MdiParent = frmMain
-                        End If
+                    'write into the Gunnersen database the details of the line
+                    connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                    sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & distro & lineNumber & subLine & "','" & distro & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+
+                    connection = New SqlConnection(connectionString)
+                    Try
+                        command = New SqlCommand(sql, connection)
+                        connection.Open()
+                        command.ExecuteNonQuery()
+                    Catch ex As Exception
+                        MessageBox.Show(ex.ToString)
+                    End Try
+
+                    If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                        lineloop = lineloop + 1
+                        LoadAttributeTable()
                     Else
-                        If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
-                            lineloop = lineloop + 1
-                            LoadAttributeTable()
+                        MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        lineloop = 0
+                        Me.Close()
+                        If igType = "CO" Then
+                            frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
                         Else
-                            MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                            lineloop = 0
-                            Me.Close()
-                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
-                            frmPurchaseOrder.Show()
-                            frmPurchaseOrder.MdiParent = frmMain
+                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
                         End If
+
+                        frmPurchaseOrder.MdiParent = frmPO.parFrm
+                        frmPurchaseOrder.Show()
+
                     End If
-
-                Case "STANDARD"
-
-                    If lineloop = 0 Then
-                        'write into the Gunnersen database the details of the run
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                        sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
-                        connection = New SqlConnection(connectionString)
-                        Try
-                            command = New SqlCommand(sql, connection)
-                            connection.Open()
-                            command.ExecuteNonQuery()
-                        Catch ex As Exception
-                            MessageBox.Show(ex.ToString)
-                        End Try
-                    End If
-
-                    If itemQty > 0 Then
-                        'write into the Gunnersen database the details of the line
-                        connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                        sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "');"
-                        connection = New SqlConnection(connectionString)
-                        Try
-                            command = New SqlCommand(sql, connection)
-                            connection.Open()
-                            command.ExecuteNonQuery()
-                        Catch ex As Exception
-                            MessageBox.Show(ex.ToString)
-                        End Try
-
-                        If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
-                            lineloop = lineloop + 1
-                            LoadAttributeTable()
-                        Else
-                            MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                            lineloop = 0
-                            Me.Close()
-                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
-                            frmPurchaseOrder.Show()
-                            frmPurchaseOrder.MdiParent = frmMain
-                        End If
+                Else
+                    If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                        lineloop = lineloop + 1
+                        LoadAttributeTable()
                     Else
-                        If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
-                            lineloop = lineloop + 1
-                            LoadAttributeTable()
+                        MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        lineloop = 0
+                        Me.Close()
+                        If igType = "CO" Then
+                            frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
                         Else
-                            MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                            lineloop = 0
-                            Me.Close()
-                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
-                            frmPurchaseOrder.Show()
-                            frmPurchaseOrder.MdiParent = frmMain
+                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
                         End If
+
+                        frmPurchaseOrder.MdiParent = frmPO.parFrm
+                        frmPurchaseOrder.Show()
+
                     End If
+                End If
+            Else
 
 
-                Case Else ' put case else here
-                    ' check that the packqty for the current row isn't 0, if it is run the routine, and go to the next row
-                    If packQty <> 0 Then
 
-                        If attributeValue.Contains("MIXED") Then
-                            dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the first pack of" & System.Environment.NewLine & ProductName, "", supPackID, False, False)
-                            If Not supPackID = "" Then
-                                lblPacks.Text = "Pack number " & 1 & " of " & packQty
+
+                Select Case attributeValue
+                    Case "BATCH"
+                        If lineloop = 0 Then
+
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            If igType = "PO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & po & lineNumber & subLine & "';"
+                            ElseIf igType = "DO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & distro & lineNumber & subLine & "';"
+                            ElseIf igType = "CO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & co & lineNumber & subLine & "';"
+                            End If
+
+                            RunSQL(connectionString, sql, "Run List")
+
+                            max = dsLineItems.Tables("Run List").Rows.Count - 1
+                            If max = -1 Then
+                                runNumber = 0
+                            Else
+                                runNumber = dsLineItems.Tables("Run List").Rows.Count + 1
+                            End If
+
+                            'write into the Gunnersen database the details of the run
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            If igType = "PO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
+                            ElseIf igType = "CO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & co & RUN_NUMBER & "','" & RUN_NUMBER & "','" & co & lineNumber & subLine & "','" & DateTime.Now & "','" & co & "','" & delDockNO & "');"
+                            ElseIf igType = "DO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & distro & RUN_NUMBER & "','" & RUN_NUMBER & "','" & distro & lineNumber & subLine & "','" & DateTime.Now & "','" & distro & "','" & delDockNO & "');"
+                            End If
+                            connection = New SqlConnection(connectionString)
+                            Try
+                                command = New SqlCommand(sql, connection)
+                                connection.Open()
+                                command.ExecuteNonQuery()
+                            Catch ex As Exception
+                                MessageBox.Show(ex.ToString)
+                            End Try
+                        End If
+
+                        If itemQty > 0 Then
+                            For i = 0 To packQty - 1
+                                ''dd.ShowDialog("Batch Number", "Please enter the batch number for " & System.Environment.NewLine & ProductName, "", batchNo, False, False)
+                                batchNo = "000999"
+                                If Not batchNo = "" Then
+                                    lblPacks.Text = "Pack number " & lineloop & " of " & packQty
+                                    lotcontrol = 1
+                                Else
+                                    MessageBox.Show("You have pressed cancel, nothing has been saved.", "Not Saved", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                                    cleanupExit = True
+                                    GoTo ExitRoutine
+                                End If
+                                'write into the Gunnersen database the details of the line
+                                connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                                If igType = "PO" Then
+                                    sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+                                ElseIf igType = "CO" Then
+                                    sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & co & lineNumber & subLine & "','" & co & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+                                ElseIf igType = "DO" Then
+                                    sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & distro & lineNumber & subLine & "','" & distro & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+                                End If
+
+                                connection = New SqlConnection(connectionString)
+                                Try
+                                    command = New SqlCommand(sql, connection)
+                                    connection.Open()
+                                    command.ExecuteNonQuery()
+                                Catch ex As Exception
+                                    MessageBox.Show(ex.ToString)
+                                End Try
+
+                                If i < packQty - 1 Then
+                                    Continue For
+                                End If
+
+                                If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                                    lineloop = lineloop + 1
+                                    LoadAttributeTable()
+
+                                Else
+                                    MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                    lineloop = 0
+                                    Me.Close()
+
+                                    If igType = "CO" Then
+                                        frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                                    Else
+                                        frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                                    End If
+
+                                    frmPurchaseOrder.MdiParent = frmPO.parFrm
+                                    frmPurchaseOrder.Show()
+
+                                End If
+                            Next
+
+                        Else
+                            If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                                lineloop = lineloop + 1
+                                LoadAttributeTable()
+                            Else
+                                MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                lineloop = 0
+                                Me.Close()
+
+                                If igType = "CO" Then
+                                    frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                                Else
+                                    frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                                End If
+
+                                frmPurchaseOrder.MdiParent = frmPO.parFrm
+                                frmPurchaseOrder.Show()
+
+                            End If
+                        End If
+
+                    Case "EXPIRY"
+                        If lineloop = 0 Then
+
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            If igType = "PO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & po & lineNumber & subLine & "';"
+                            ElseIf igType = "DO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & distro & lineNumber & subLine & "';"
+                            ElseIf igType = "CO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & co & lineNumber & subLine & "';"
+                            End If
+
+                            RunSQL(connectionString, sql, "Run List")
+
+                            max = dsLineItems.Tables("Run List").Rows.Count - 1
+                            If max = -1 Then
+                                runNumber = 0
+                            Else
+                                runNumber = dsLineItems.Tables("Run List").Rows.Count + 1
+                            End If
+
+                            'write into the Gunnersen database the details of the run
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+
+                            If igType = "PO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
+                            ElseIf igType = "CO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & co & RUN_NUMBER & "','" & RUN_NUMBER & "','" & co & lineNumber & subLine & "','" & DateTime.Now & "','" & co & "','" & delDockNO & "');"
+                            ElseIf igType = "DO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & distro & RUN_NUMBER & "','" & RUN_NUMBER & "','" & distro & lineNumber & subLine & "','" & DateTime.Now & "','" & distro & "','" & delDockNO & "');"
+                            End If
+
+                            connection = New SqlConnection(connectionString)
+                            Try
+                                command = New SqlCommand(sql, connection)
+                                connection.Open()
+                                command.ExecuteNonQuery()
+                            Catch ex As Exception
+                                MessageBox.Show(ex.ToString)
+                            End Try
+                        End If
+
+                        If itemQty > 0 Then
+
+                            'dd.ShowDialog("Batch Number", "Please enter the manufactured date for " & System.Environment.NewLine & ProductName, batchNo, batchNo, False, True)
+                            batchNo = "01/01/1990"
+                            If Not batchNo = "" Then
+                                lblPacks.Text = "Pack number " & lineloop & " of " & packQty
                                 lotcontrol = 1
                             Else
                                 MessageBox.Show("You have pressed cancel, nothing has been saved.")
+                                cleanupExit = True
                                 GoTo ExitRoutine
                             End If
-                        ElseIf attributeValue.Contains("FIXED") Then
-                            supPackID = "BULK"
-                            lotcontrol = 2
-                        End If
 
+                            batchNo = Convert.ToDateTime(batchNo).ToString("yyyMMdd")
 
-                        ' query the m3 database to select the attribute model for the purpose of building the attribute table
-                        connectionString = "Data Source=m3db;Initial Catalog=M3FDBTST;Persist Security Info=True;User ID=Query;Password=Query"
-                        sql = "SELECT AEATMO, AEATID, AEANSQ, AECOBT FROM MAMOLI WHERE AEATMO = '" & attributeValue & "';"
-                        connection = New SqlConnection(connectionString)
-                        Try
-                            connection.Open()
-                            command = New SqlCommand(sql, connection)
-                            adapter.SelectCommand = command
-                            If Not dsLineItems.Tables.Contains("Attribute Model") Then
-                                adapter.Fill(dsLineItems.Tables.Add("Attribute Model"))
+                            'write into the Gunnersen database the details of the line
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            If igType = "PO" Then
+                                sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+                            ElseIf igType = "CO" Then
+                                sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & co & lineNumber & subLine & "','" & co & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+                            ElseIf igType = "DO" Then
+                                sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, TALLY, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & distro & lineNumber & subLine & "','" & distro & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & batchNo & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+                            End If
+
+                            connection = New SqlConnection(connectionString)
+                            Try
+                                command = New SqlCommand(sql, connection)
+                                connection.Open()
+                                command.ExecuteNonQuery()
+                            Catch ex As Exception
+                                MessageBox.Show(ex.ToString)
+                            End Try
+
+                            If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                                lineloop = lineloop + 1
+                                LoadAttributeTable()
                             Else
-                                dsLineItems.Tables("Attribute Model").Clear()
-                                adapter.Fill(dsLineItems.Tables("Attribute Model"))
+                                MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                lineloop = 0
+                                Me.Close()
+
+                                If igType = "CO" Then
+                                    frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                                Else
+                                    frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                                End If
+
+                                frmPurchaseOrder.MdiParent = frmPO.parFrm
+                                frmPurchaseOrder.Show()
+
                             End If
-                            adapter.Dispose()
-                            command.Dispose()
-                            connection.Close()
-                        Catch ex As Exception
-                            MsgBox(ex.ToString)
-                        End Try
-
-                        ' throw an error if for some reason the attribute value is not returned.
-                        If dsLineItems.Tables("Attribute Model").Rows.Count = 0 Then
-                            MessageBox.Show("Invalid Attribute Model - Contact Help Desk")
-                        End If
-
-                        'build the temporary attribute table for filling from the M3 database
-                        If attributeTable.Columns.Count = 0 Then
-                            With attributeTable
-                                .Columns.Add("AEANSQ", Type.GetType("System.Double"))
-                                .Columns.Add("AEATID", Type.GetType("System.String"))
-                                .Columns.Add("AEATMO", Type.GetType("System.String"))
-                                .Columns.Add("AEQTY", Type.GetType("System.String"))
-                                .PrimaryKey = New DataColumn() {attributeTable.Columns("AEANSQ")}
-                            End With
-                        End If
-
-
-                        'Query the M3 database and fill the table in the dataset, if the table already exists then clear it and add the new data
-                        connectionString = "Data Source=m3db;Initial Catalog=M3FDBTST;Persist Security Info=True;User ID=Query;Password=Query"
-                        sql = "SELECT AEANSQ, AEATID, AEATMO FROM MAMOLI where AEATMO = '" & attributeValue & "' ORDER BY AEANSQ"
-                        connection = New SqlConnection(connectionString)
-                        Try
-                            connection.Open()
-                            command = New SqlCommand(sql, connection)
-                            adapter.SelectCommand = command
-                            If Not dsLineItems.Tables.Contains("LineAttributes") Then
-                                adapter.Fill(dsLineItems.Tables.Add("LineAttributes"))
+                        Else
+                            If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                                lineloop = lineloop + 1
+                                LoadAttributeTable()
                             Else
-                                dsLineItems.Tables("LineAttributes").Clear()
-                                attributeTable.Clear()
-                                adapter.Fill(dsLineItems.Tables("LineAttributes"))
+                                MessageBox.Show("All items entered", "Items Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                lineloop = 0
+                                Me.Close()
+
+                                If igType = "CO" Then
+                                    frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                                Else
+                                    frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                                End If
+
+                                frmPurchaseOrder.MdiParent = frmPO.parFrm
+                                frmPurchaseOrder.Show()
+
                             End If
-                            adapter.Dispose()
-                            command.Dispose()
-                            connection.Close()
-                        Catch ex As Exception
-                            MsgBox(ex.ToString)
-                        End Try
-
-                        'iterate through the Attributes for that pack and set the qty to zero ready for updating to M3
-                        For i As Integer = 0 To dsLineItems.Tables("LineAttributes").Rows.Count - 1
-                            attributeTable.Rows.Add(dsLineItems.Tables("LineAttributes").Rows(i)("AEANSQ"), dsLineItems.Tables("LineAttributes").Rows(i)("AEATID"), dsLineItems.Tables("LineAttributes").Rows(i)("AEATMO"), 0)
-                        Next
-
-
-                        'connect to m3 using the ATS101MI to get the relevant attribute for the lineitem and fill them into the temp attributes table
-                        Dim Server = "M3BE"
-                        Dim Port = 16205
-                        Dim UserID = "DTAMIGR"
-                        Dim PWD = "Q190E87AG"
-                        Dim APIName = "ATS101MI"
-                        Dim APIOpr = "LstAttrByRef"
-                        Dim sid As New SERVER_ID
-                        Dim rc
-
-                        rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, "")
-
-                        If rc <> 0 Then
-                            MvxSock.ShowLastError(sid, "Error Occured: ")
                         End If
 
-                        MvxSock.SetField(sid, "ORCA", "251")
-                        MvxSock.SetField(sid, "RIDN", po)
-                        MvxSock.SetField(sid, "RIDL", lineNumber)
-                        MvxSock.SetField(sid, "RIDX", subLine)
+                    Case "STANDARD", "VALUEADD"
 
-                        rc = MvxSock.Access(sid, APIOpr)
-                        If rc <> 0 Then
-                            MvxSock.ShowLastError(sid, "Error Occured: ")
+                        If lineloop = 0 Then
+
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            If igType = "PO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & po & lineNumber & subLine & "';"
+                            ElseIf igType = "DO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & distro & lineNumber & subLine & "';"
+                            ElseIf igType = "CO" Then
+                                sql = "SELECT * FROM LineReceiving WHERE PO = '" & co & lineNumber & subLine & "';"
+                            End If
+
+                            RunSQL(connectionString, sql, "Run List")
+
+                            max = dsLineItems.Tables("Run List").Rows.Count - 1
+                            If max = -1 Then
+                                runNumber = 0
+                            Else
+                                runNumber = dsLineItems.Tables("Run List").Rows.Count + 1
+                            End If
+
+                            'write into the Gunnersen database the details of the run
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            If igType = "PO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
+                            ElseIf igType = "CO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & co & RUN_NUMBER & "','" & RUN_NUMBER & "','" & co & lineNumber & subLine & "','" & DateTime.Now & "','" & co & "','" & delDockNO & "');"
+                            ElseIf igType = "DO" Then
+                                sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & distro & RUN_NUMBER & "','" & RUN_NUMBER & "','" & distro & lineNumber & subLine & "','" & DateTime.Now & "','" & distro & "','" & delDockNO & "');"
+                            End If
+
+                            connection = New SqlConnection(connectionString)
+                            Try
+                                command = New SqlCommand(sql, connection)
+                                connection.Open()
+                                command.ExecuteNonQuery()
+                            Catch ex As Exception
+                                MessageBox.Show(ex.ToString)
+                            End Try
+                        Else
+
                         End If
 
-                        strWrk = Trim(MvxSock.GetField(sid, "ATNR"))
-                        strWrk1 = Trim(MvxSock.GetField(sid, "ATID"))
-                        strWrk2 = Trim(MvxSock.GetField(sid, "ATVL"))
+                        If itemQty > 0 Then
 
-                        For i As Integer = 0 To attributeTable.Rows.Count - 1
-                            If Trim(attributeTable.Rows(i).Field(Of String)(1)) = Trim(strWrk1) Then
-                                attributeTable.Rows(i)(2) = Trim(strWrk)
-                                attributeTable.Rows(i)(3) = Trim(strWrk2)
+                            'write into the Gunnersen database the details of the line
+                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                            If igType = "PO" Then
+                                sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & po & lineNumber & subLine & "','" & po & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+                            ElseIf igType = "CO" Then
+                                sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & co & lineNumber & subLine & "','" & co & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
+                            ElseIf igType = "DO" Then
+                                sql = "INSERT INTO dbo.Attributes(ATTRIBUTE_VALUE, LINE_ID, RUN_NUMBER, ROWNUMBER, PACKQTY, ITEMQTY, PACKTYPE, LABELQTY, AppCharge, Warehouse, ItemNo, Descrip, typeFlag) Values ('" & "STD_PACK" & "', '" & distro & lineNumber & subLine & "','" & distro & RUN_NUMBER & "','" & lineloop & "','" & packQty & "','" & itemQty & "','" & attributeValue & "','" & labQty & "','" & appCharge & "', '" & warehouse & "', '" & itemNumber & "', '" & productDesc & "', '" & typeFlag & "');"
                             End If
-                        Next
 
-                        While MvxSock.More(sid)
-                            MvxSock.Access(sid, Nothing)
+                            connection = New SqlConnection(connectionString)
+                            Try
+                                command = New SqlCommand(sql, connection)
+                                connection.Open()
+                                command.ExecuteNonQuery()
+                            Catch ex As Exception
+                                MessageBox.Show(ex.ToString)
+                            End Try
+
+                            If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                                lineloop = lineloop + 1
+                                LoadAttributeTable()
+                            Else
+                                MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                lineloop = 0
+                                Me.Close()
+                                If igType = "CO" Then
+                                    frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                                Else
+                                    frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                                End If
+
+                                frmPurchaseOrder.MdiParent = frmPO.parFrm
+                                frmPurchaseOrder.Show()
+
+                            End If
+                        Else
+                            If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                                lineloop = lineloop + 1
+                                LoadAttributeTable()
+                            Else
+                                MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                lineloop = 0
+                                Me.Close()
+                                If igType = "CO" Then
+                                    frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                                Else
+                                    frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                                End If
+
+                                frmPurchaseOrder.MdiParent = frmPO.parFrm
+                                frmPurchaseOrder.Show()
+
+                            End If
+                        End If
+
+
+                    Case Else ' put case else here
+                        ' check that the packqty for the current row isn't 0, if it is run the routine, and go to the next row
+                        If packQty <> 0 Then
+                            If attributeValue.Contains("MIXED") Then
+                                dd.ShowDialog("Supplier Pack Number", "Please enter the Supplier Pack Number for the first pack of" & System.Environment.NewLine & ProductName, "", supPackID, False, False)
+                                If Not supPackID = "" Then
+                                    lblPacks.Text = "Pack number " & 1 & " of " & packQty
+                                    lotcontrol = 1
+                                Else
+                                    MessageBox.Show("You have pressed cancel, nothing has been saved.")
+                                    GoTo ExitRoutine
+                                End If
+                            ElseIf attributeValue.Contains("FIXED") Then
+                                supPackID = "BULK"
+                                lotcontrol = 2
+                            End If
+
+
+                            ' query the m3 database to select the attribute model for the purpose of building the attribute table
+                            connectionString = M3Svr.ConnString(frmMain.grid)
+                            sql = "SELECT AEATMO, AEATID, AEANSQ, AECOBT FROM MAMOLI WHERE AEATMO = '" & attributeValue & "';"
+                            connection = New SqlConnection(connectionString)
+                            Try
+                                connection.Open()
+                                command = New SqlCommand(sql, connection)
+                                adapter.SelectCommand = command
+                                If Not dsLineItems.Tables.Contains("Attribute Model") Then
+                                    adapter.Fill(dsLineItems.Tables.Add("Attribute Model"))
+                                Else
+                                    dsLineItems.Tables("Attribute Model").Clear()
+                                    adapter.Fill(dsLineItems.Tables("Attribute Model"))
+                                End If
+                                adapter.Dispose()
+                                command.Dispose()
+                                connection.Close()
+                            Catch ex As Exception
+                                MsgBox(ex.ToString)
+                            End Try
+
+                            ' throw an error if for some reason the attribute value is not returned.
+                            If dsLineItems.Tables("Attribute Model").Rows.Count = 0 Then
+                                MessageBox.Show("Invalid Attribute Model - Contact Help Desk")
+                            End If
+
+                            'build the temporary attribute table for filling from the M3 database
+                            If attributeTable.Columns.Count = 0 Then
+                                With attributeTable
+                                    .Columns.Add("AEANSQ", Type.GetType("System.Double"))
+                                    .Columns.Add("AEATID", Type.GetType("System.String"))
+                                    .Columns.Add("AEATMO", Type.GetType("System.String"))
+                                    .Columns.Add("AEQTY", Type.GetType("System.String"))
+                                    .PrimaryKey = New DataColumn() {attributeTable.Columns("AEANSQ")}
+                                End With
+                            End If
+
+
+                            'Query the M3 database and fill the table in the dataset, if the table already exists then clear it and add the new data
+                            connectionString = M3Svr.ConnString(frmMain.grid)
+                            sql = "SELECT AEANSQ, AEATID, AEATMO FROM MAMOLI where AEATMO = '" & attributeValue & "' ORDER BY AEANSQ"
+                            connection = New SqlConnection(connectionString)
+                            Try
+                                connection.Open()
+                                command = New SqlCommand(sql, connection)
+                                adapter.SelectCommand = command
+                                If Not dsLineItems.Tables.Contains("LineAttributes") Then
+                                    adapter.Fill(dsLineItems.Tables.Add("LineAttributes"))
+                                Else
+                                    dsLineItems.Tables("LineAttributes").Clear()
+                                    attributeTable.Clear()
+                                    adapter.Fill(dsLineItems.Tables("LineAttributes"))
+                                End If
+                                adapter.Dispose()
+                                command.Dispose()
+                                connection.Close()
+                            Catch ex As Exception
+                                MsgBox(ex.ToString)
+                            End Try
+
+                            'iterate through the Attributes for that pack and set the qty to zero ready for updating to M3
+                            For i As Integer = 0 To dsLineItems.Tables("LineAttributes").Rows.Count - 1
+                                attributeTable.Rows.Add(dsLineItems.Tables("LineAttributes").Rows(i)("AEANSQ"), dsLineItems.Tables("LineAttributes").Rows(i)("AEATID"), dsLineItems.Tables("LineAttributes").Rows(i)("AEATMO"), 0)
+                            Next
+
+
+                            'connect to m3 using the ATS101MI to get the relevant attribute for the lineitem and fill them into the temp attributes table
+                            Dim Server = "M3BE"
+                            Dim Port = M3Svr.Port(frmMain.grid)
+                            Dim UserID = "DTAMIGR"
+                            Dim PWD = "Q190E87AG"
+                            Dim APIName = "ATS101MI"
+                            Dim APIOpr = "LstAttrByRef"
+                            Dim sid As New SERVER_ID
+                            Dim rc
+
+                            rc = MvxSock.Connect(sid, Server, Port, UserID, PWD, APIName, "")
+
+                            If rc <> 0 Then
+                                MvxSock.ShowLastError(sid, "Error Occured: ")
+                            End If
+
+                            MvxSock.SetField(sid, "ORCA", "251")
+                            MvxSock.SetField(sid, "RIDN", po)
+                            MvxSock.SetField(sid, "RIDL", lineNumber)
+                            MvxSock.SetField(sid, "RIDX", subLine)
+
+                            rc = MvxSock.Access(sid, APIOpr)
+                            If rc <> 0 Then
+                                MvxSock.ShowLastError(sid, "Error Occured: ")
+                            End If
+
                             strWrk = Trim(MvxSock.GetField(sid, "ATNR"))
                             strWrk1 = Trim(MvxSock.GetField(sid, "ATID"))
                             strWrk2 = Trim(MvxSock.GetField(sid, "ATVL"))
@@ -739,102 +1026,153 @@ tryagain:
                                 End If
                             Next
 
-                        End While
+                            While MvxSock.More(sid)
+                                MvxSock.Access(sid, Nothing)
+                                strWrk = Trim(MvxSock.GetField(sid, "ATNR"))
+                                strWrk1 = Trim(MvxSock.GetField(sid, "ATID"))
+                                strWrk2 = Trim(MvxSock.GetField(sid, "ATVL"))
 
+                                For i As Integer = 0 To attributeTable.Rows.Count - 1
+                                    If Trim(attributeTable.Rows(i).Field(Of String)(1)) = Trim(strWrk1) Then
+                                        attributeTable.Rows(i)(2) = Trim(strWrk)
+                                        attributeTable.Rows(i)(3) = Trim(strWrk2)
+                                    End If
+                                Next
 
-                        ' if this is the first run of this function then perform the below actions
-                        If Not dsLineItems.Tables.Contains("Attribute Table") Then
-                            'create attribute table for filling
-                            dsLineItems.Tables.Add(attributeTable)
+                            End While
+
+                            If Not dsLineItems.Tables.Contains("Attribute Table") Then
+                                'create attribute table for filling
+                                dsLineItems.Tables.Add(attributeTable)
+                            End If
+
+                            If lineloop = 0 Then
+                                connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                                If igType = "PO" Then
+                                    sql = "SELECT * FROM LineReceiving WHERE PO = '" & po & lineNumber & subLine & "';"
+                                ElseIf igType = "DO" Then
+                                    sql = "SELECT * FROM LineReceiving WHERE PO = '" & distro & lineNumber & subLine & "';"
+                                ElseIf igType = "CO" Then
+                                    sql = "SELECT * FROM LineReceiving WHERE PO = '" & co & lineNumber & subLine & "';"
+                                End If
+
+                                RunSQL(connectionString, sql, "Run List")
+
+                                max = dsLineItems.Tables("Run List").Rows.Count - 1
+                                If max = -1 Then
+                                    runNumber = 0
+                                Else
+                                    runNumber = dsLineItems.Tables("Run List").Rows.Count + 1
+                                End If
+
+                                'write into the Gunnersen database the details of the line
+                                connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
+                                ' There is dummy data in the below sql string
+                                If igType = "PO" Then
+                                    sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & lineNumber & subLine & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
+                                ElseIf igType = "CO" Then
+                                    sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & co & lineNumber & subLine & RUN_NUMBER & "','" & RUN_NUMBER & "','" & co & lineNumber & subLine & "','" & DateTime.Now & "','" & co & "','" & delDockNO & "');"
+                                ElseIf igType = "DO" Then
+                                    sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & distro & lineNumber & subLine & RUN_NUMBER & "','" & RUN_NUMBER & "','" & distro & lineNumber & subLine & "','" & DateTime.Now & "','" & distro & "','" & delDockNO & "');"
+                                End If
+
+                                connection = New SqlConnection(connectionString)
+                                Try
+                                    command = New SqlCommand(sql, connection)
+                                    connection.Open()
+                                    command.ExecuteNonQuery()
+                                Catch ex As Exception
+                                    MessageBox.Show(ex.ToString)
+                                End Try
+
+                            End If
+
+                            ' if this is the first run of this function then perform the below actions
 
                             'get the list of previous runs saved for this purchase order
-                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                            sql = "SELECT * FROM LineReceiving WHERE PO_ID= '" & po & lineNumber & subLine & "';"
-                            RunSQL(connectionString, sql, "Run List")
 
-                            max = dsLineItems.Tables("Run List").Rows.Count - 1
-                            If max = -1 Then
-                                runNumber = 0
-                            Else
-                                runNumber = dsLineItems.Tables("Run List").Rows.Count + 1
+                            ' load the attributes table in from the dataset and add some relevant columns and thier associated values for display
+                            dgvAttributeEntry.DataSource = dsLineItems.Tables("Attribute Table")
+                            dsLineItems.Tables("Attribute Table").Rows(0)("AEQTY") = supPackID
+                            If creation = 0 Then
+                                dsLineItems.Tables("Attribute Table").Columns.Add("LINE_ID")
+                                dsLineItems.Tables("Attribute Table").Columns.Add("Run Number")
+                                dsLineItems.Tables("Attribute Table").Columns.Add("ROWNUMBER")
                             End If
 
-                            'write into the Gunnersen database the details of the line
-                            connectionString = "Data Source=m3db;Initial Catalog=Gunnersen;Integrated Security=False;User ID=GunUpdate;Password=Sabr2th12;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False"
-                            ' There is dummy data in the below sql string
-                            sql = "INSERT INTO dbo.LineReceiving(ID, RUN_NO, PO_ID, RUN_DATETIME, PO, DELDOCKNO) Values ('" & po & lineNumber & subLine & RUN_NUMBER & "','" & RUN_NUMBER & "','" & po & lineNumber & subLine & "','" & DateTime.Now & "','" & po & "','" & delDockNO & "');"
-                            connection = New SqlConnection(connectionString)
-                            Try
-                                command = New SqlCommand(sql, connection)
-                                connection.Open()
-                                command.ExecuteNonQuery()
-                            Catch ex As Exception
-                                MessageBox.Show(ex.ToString)
-                            End Try
-                        End If
+                            Dim athRowNo As Integer
+
+                            If igType = "PO" Or igType = "DO" Then
+                                Do Until dsLineItems.Tables(0).Rows(athRowNo)("IBPNLI") = lineNumber
+                                    athRowNo = athRowNo + 1
+                                Loop
+                            ElseIf igType = "CO" Then
+                                Do Until dsLineItems.Tables(0).Rows(athRowNo)("ICPNLI") = lineNumber
+                                    athRowNo = athRowNo + 1
+                                Loop
+                            End If
 
 
 
-                        ' load the attributes table in from the dataset and add some relevant columns and thier associated values for display
-                        dgvAttributeEntry.DataSource = dsLineItems.Tables("Attribute Table")
-                        dsLineItems.Tables("Attribute Table").Rows(0)("AEQTY") = supPackID
-                        If creation = 0 Then
-                            dsLineItems.Tables("Attribute Table").Columns.Add("LINE_ID")
-                            dsLineItems.Tables("Attribute Table").Columns.Add("Run Number")
-                            dsLineItems.Tables("Attribute Table").Columns.Add("ROWNUMBER")
-                        End If
+                            For i = 0 To dsLineItems.Tables("Attribute Table").Rows.Count - 1
+                                dsLineItems.Tables("Attribute Table").Rows(i)("LINE_ID") = LINE_ID
 
-                        Dim athRowNo As Integer
-                        Do Until dsLineItems.Tables(0).Rows(athRowNo)("IBPNLI") = lineNumber
-                            athRowNo = athRowNo + 1
-                        Loop
+                                If igType = "PO" Then
+                                    dsLineItems.Tables("Attribute Table").Rows(i)("Run Number") = po & RUN_NUMBER
+                                ElseIf igType = "CO" Then
+                                    dsLineItems.Tables("Attribute Table").Rows(i)("Run Number") = co & RUN_NUMBER
+                                ElseIf igType = "DO" Then
+                                    dsLineItems.Tables("Attribute Table").Rows(i)("Run Number") = distro & RUN_NUMBER
+                                End If
+                                dsLineItems.Tables("Attribute Table").Rows(i)("ROWNUMBER") = athRowNo
+                            Next
 
-                        For i = 0 To dsLineItems.Tables("Attribute Table").Rows.Count - 1
-                            dsLineItems.Tables("Attribute Table").Rows(i)("LINE_ID") = LINE_ID
-                            dsLineItems.Tables("Attribute Table").Rows(i)("Run Number") = po & RUN_NUMBER
-                            dsLineItems.Tables("Attribute Table").Rows(i)("ROWNUMBER") = athRowNo
-                        Next
+                            dgvAttributeEntry.Columns(0).Visible = False
+                            dgvAttributeEntry.Columns(2).Visible = False
+                            dgvAttributeEntry.Columns(4).Visible = False
+                            dgvAttributeEntry.Columns(5).Visible = False
+                            dgvAttributeEntry.Columns(6).Visible = False
+                            dgvAttributeEntry.Columns(3).HeaderText = "Qty"
+                            dgvAttributeEntry.Columns(1).HeaderText = "Value"
+                            dgvAttributeEntry.Columns(0).Width = 114
+                            dgvAttributeEntry.Columns(1).Width = 114
+                            creation = 1
 
-                        dgvAttributeEntry.Columns(0).Visible = False
-                        dgvAttributeEntry.Columns(2).Visible = False
-                        dgvAttributeEntry.Columns(4).Visible = False
-                        dgvAttributeEntry.Columns(5).Visible = False
-                        dgvAttributeEntry.Columns(6).Visible = False
-                        dgvAttributeEntry.Columns(3).HeaderText = "Qty"
-                        dgvAttributeEntry.Columns(1).HeaderText = "Value"
-                        dgvAttributeEntry.Columns(0).Width = 114
-                        dgvAttributeEntry.Columns(1).Width = 114
-                        creation = 1
-                    Else
-                        'if the pack qty is zero then go to the next line as long as this isn't the last line
-                        If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
-                            lineloop = lineloop + 1
-                            LoadAttributeTable()
                         Else
-                            MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            'if the pack qty is zero then go to the next line as long as this isn't the last line
+                            If lineloop < dsLineItems.Tables(0).Rows.Count - 1 Then
+                                lineloop = lineloop + 1
+                                LoadAttributeTable()
+                            Else
+                                MessageBox.Show("All packs entered", "Packs Entered", MessageBoxButtons.OK, MessageBoxIcon.Information)
 ExitRoutine:
-                            lineloop = 0
-                            If cleanupExit Then
-                                deleteRun(po, RUN_NUMBER)
+                                lineloop = 0
+                                If cleanupExit Then
+                                    deleteRun(po, RUN_NUMBER)
+                                End If
+                                Me.Close()
+                                If igType = "CO" Then
+                                    frmPurchaseOrder = New frmPO(co, Convert.ToInt32(subLine) + 1, igType)
+                                Else
+                                    frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, igType)
+                                End If
+
+                                frmPurchaseOrder.MdiParent = frmPO.parFrm
+                                frmPurchaseOrder.Show()
+
                             End If
-                            Me.Close()
-                            frmPurchaseOrder = New frmPO(po, Convert.ToInt32(subLine) + 1, "PO")
-                            frmPurchaseOrder.Show()
-                            frmPurchaseOrder.MdiParent = frmMain
                         End If
-                    End If
 
-                    If Not supPackID = "" Then
+                        If Not supPackID = "" Then
 
-                        If Not dsLineItems.Tables.Contains("Attribute Original" & lineloop) Then
-                            dtAttributeOriginal = dsLineItems.Tables("Attribute Table").Copy
-                            dtAttributeOriginal.TableName = "Attribute Original" & lineloop
-                            dsLineItems.Tables.Add(dtAttributeOriginal)
+                            If Not dsLineItems.Tables.Contains("Attribute Original" & lineloop) Then
+                                dtAttributeOriginal = dsLineItems.Tables("Attribute Table").Copy
+                                dtAttributeOriginal.TableName = "Attribute Original" & lineloop
+                                dsLineItems.Tables.Add(dtAttributeOriginal)
+                            End If
                         End If
-                    End If
-            End Select
-
-
+                End Select
+            End If
         Else
             'the below code deals with a run which is being edited
 
@@ -925,7 +1263,7 @@ ExitRoutine:
                     End If
 
                     po = dsLineItems.Tables(0).Rows(0)("IBPUNO")
-                    connectionString = "Data Source=m3db;Initial Catalog=M3FDBTST;Persist Security Info=True;User ID=Query;Password=Query"
+                    connectionString = M3Svr.ConnString(frmMain.grid)
                     sql = "SELECT MITMAS.MMFUDS, MPLINE.IBPNLI, MPLINE.IBPNLS" & _
                         " FROM MPLINE, MITMAS" & _
                         " WHERE (((MPLINE.IBITNO)=[MITMAS].[MMITNO]) AND ((MPLINE.IBPUNO)='" & po & "'));"

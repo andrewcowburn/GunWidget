@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="KbC2Vz34m64fvzfausZxvn/SjuE=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="cJXqcgMb33GQ3MHvMBl222OPcPQ=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="StockOperationsServiceSoapBinding1">
       <properties>
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="StockOperationsPort1" contract="wsStockOperations.StockOperations" bindingType="basicHttpBinding" address="http://m3be.gunnersens.com.au:21007/mws-ws/services/StockOperations" bindingConfiguration="StockOperationsServiceSoapBinding1">
+    <endpoint name="StockOperationsPort1" contract="wsStockOperations.StockOperations" bindingType="basicHttpBinding" address="http://m3be.gunnersens.com.au:20007/mws-ws/services/StockOperations" bindingConfiguration="StockOperationsServiceSoapBinding1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://m3be.gunnersens.com.au:21007/mws-ws/services/StockOperations</serializedValue>
+          <serializedValue>http://m3be.gunnersens.com.au:20007/mws-ws/services/StockOperations</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

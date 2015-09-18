@@ -1,5 +1,5 @@
 ﻿Public Class frmMain
-
+    Public grid = "PRD"
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         End
     End Sub
@@ -30,5 +30,11 @@
         Else
             ClosePurchaseOrderToolStripMenuItem.Enabled = False
         End If
+    End Sub
+
+    Private Sub RePrintLabelsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RePrintLabelsToolStripMenuItem.Click
+        Dim frmRep As New frmReprint
+        frmRep.Show()
+        frmRep.MdiParent = Me
     End Sub
 End Class

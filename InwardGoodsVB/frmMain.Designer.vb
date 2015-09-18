@@ -27,6 +27,7 @@ Partial Class frmMain
         Me.FileToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePurchaseOrderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RePrintLabelsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NewRecieptToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
@@ -47,7 +48,7 @@ Partial Class frmMain
         '
         'FileToolStripMenuItem1
         '
-        Me.FileToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ClosePurchaseOrderToolStripMenuItem, Me.ExitToolStripMenuItem})
+        Me.FileToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ClosePurchaseOrderToolStripMenuItem, Me.ExitToolStripMenuItem, Me.RePrintLabelsToolStripMenuItem})
         Me.FileToolStripMenuItem1.Name = "FileToolStripMenuItem1"
         Me.FileToolStripMenuItem1.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem1.Text = "File"
@@ -64,6 +65,12 @@ Partial Class frmMain
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
         Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(187, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
+        '
+        'RePrintLabelsToolStripMenuItem
+        '
+        Me.RePrintLabelsToolStripMenuItem.Name = "RePrintLabelsToolStripMenuItem"
+        Me.RePrintLabelsToolStripMenuItem.Size = New System.Drawing.Size(187, 22)
+        Me.RePrintLabelsToolStripMenuItem.Text = "Re-Print Labels..."
         '
         'FileToolStripMenuItem
         '
@@ -113,6 +120,7 @@ Partial Class frmMain
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MaximumSize = New System.Drawing.Size(1050, 768)
         Me.Name = "frmMain"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Gunnersen Inward Goods Receipting"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.MenuStrip1.ResumeLayout(False)
@@ -132,4 +140,5 @@ Partial Class frmMain
     Friend WithEvents ToolStripStatusLabel1 As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents tslUser As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents ClosePurchaseOrderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RePrintLabelsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

@@ -17,6 +17,8 @@ Public Class frmInput
             dtpDate.Visible = True
             Me.ActiveControl = Me.dtpDate
         Else
+            dtpDate.Visible = False
+            txtInput.Visible = True
             Me.ActiveControl = Me.txtInput
         End If
 

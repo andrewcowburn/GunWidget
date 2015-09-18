@@ -18,13 +18,13 @@ Namespace wsStockOperations
      System.ServiceModel.ServiceContractAttribute([Namespace]:="http://schemas.lawson.com/StockOperations", ConfigurationName:="wsStockOperations.StockOperations")>  _
     Public Interface StockOperations
         
-        'CODEGEN: Generating message contract since the operation PPS363 is neither RPC nor document wrapped.
+        'CODEGEN: Generating message contract since the operation Update_Averge_Costs is neither RPC nor document wrapped.
         <System.ServiceModel.OperationContractAttribute(Action:="", ReplyAction:="*"),  _
          System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults:=true)>  _
-        Function PPS363(ByVal request As wsStockOperations.PPS363) As wsStockOperations.PPS363Response
+        Function Update_Averge_Costs(ByVal request As wsStockOperations.Update_Averge_Costs) As wsStockOperations.Update_Averge_CostsResponse
         
         <System.ServiceModel.OperationContractAttribute(Action:="", ReplyAction:="*")>  _
-        Function PPS363Async(ByVal request As wsStockOperations.PPS363) As System.Threading.Tasks.Task(Of wsStockOperations.PPS363Response)
+        Function Update_Averge_CostsAsync(ByVal request As wsStockOperations.Update_Averge_Costs) As System.Threading.Tasks.Task(Of wsStockOperations.Update_Averge_CostsResponse)
         
         'CODEGEN: Generating message contract since the operation UpdateCosts is neither RPC nor document wrapped.
         <System.ServiceModel.OperationContractAttribute(Action:="", ReplyAction:="*"),  _
@@ -680,7 +680,7 @@ Namespace wsStockOperations
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.lawson.com/StockOperations/PPS363")>  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.lawson.com/StockOperations/Update_Averge_Costs")>  _
     Partial Public Class ct_1
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
@@ -700,22 +700,22 @@ Namespace wsStockOperations
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.lawson.com/StockOperations/PPS363")>  _
-    Partial Public Class PPS363ResponseType
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.lawson.com/StockOperations/Update_Averge_Costs")>  _
+    Partial Public Class Update_Averge_CostsResponseType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
         
-        Private pPS363Field As ct_1
+        Private cAS370Field As ct_1
         
         '''<remarks/>
         <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
-        Public Property PPS363() As ct_1
+        Public Property CAS370() As ct_1
             Get
-                Return Me.pPS363Field
+                Return Me.cAS370Field
             End Get
             Set
-                Me.pPS363Field = value
-                Me.RaisePropertyChanged("PPS363")
+                Me.cAS370Field = value
+                Me.RaisePropertyChanged("CAS370")
             End Set
         End Property
         
@@ -734,37 +734,19 @@ Namespace wsStockOperations
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.lawson.com/StockOperations/PPS363")>  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.lawson.com/StockOperations/Update_Averge_Costs")>  _
     Partial Public Class ct_0
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
         
-        Private packageNumberField As String
-        
         Private itemNumberField As String
         
-        Private orderLineField As String
+        Private facilityField As String
         
-        Private orderNumberField As String
-        
-        Private lineSuffixField As String
-        
-        Private receivedQuantityField As String
+        Private averageCostField As String
         
         '''<remarks/>
         <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
-        Public Property PackageNumber() As String
-            Get
-                Return Me.packageNumberField
-            End Get
-            Set
-                Me.packageNumberField = value
-                Me.RaisePropertyChanged("PackageNumber")
-            End Set
-        End Property
-        
-        '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ItemNumber() As String
             Get
                 Return Me.itemNumberField
@@ -776,50 +758,26 @@ Namespace wsStockOperations
         End Property
         
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=2)>  _
-        Public Property OrderLine() As String
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
+        Public Property Facility() As String
             Get
-                Return Me.orderLineField
+                Return Me.facilityField
             End Get
             Set
-                Me.orderLineField = value
-                Me.RaisePropertyChanged("OrderLine")
+                Me.facilityField = value
+                Me.RaisePropertyChanged("Facility")
             End Set
         End Property
         
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
-        Public Property OrderNumber() As String
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
+        Public Property AverageCost() As String
             Get
-                Return Me.orderNumberField
+                Return Me.averageCostField
             End Get
             Set
-                Me.orderNumberField = value
-                Me.RaisePropertyChanged("OrderNumber")
-            End Set
-        End Property
-        
-        '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=4)>  _
-        Public Property LineSuffix() As String
-            Get
-                Return Me.lineSuffixField
-            End Get
-            Set
-                Me.lineSuffixField = value
-                Me.RaisePropertyChanged("LineSuffix")
-            End Set
-        End Property
-        
-        '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
-        Public Property ReceivedQuantity() As String
-            Get
-                Return Me.receivedQuantityField
-            End Get
-            Set
-                Me.receivedQuantityField = value
-                Me.RaisePropertyChanged("ReceivedQuantity")
+                Me.averageCostField = value
+                Me.RaisePropertyChanged("AverageCost")
             End Set
         End Property
         
@@ -838,22 +796,22 @@ Namespace wsStockOperations
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.lawson.com/StockOperations/PPS363")>  _
-    Partial Public Class PPS363Type
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.lawson.com/StockOperations/Update_Averge_Costs")>  _
+    Partial Public Class Update_Averge_CostsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
         
-        Private pPS363Field As ct_0
+        Private cAS370Field As ct_0
         
         '''<remarks/>
         <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
-        Public Property PPS363() As ct_0
+        Public Property CAS370() As ct_0
             Get
-                Return Me.pPS363Field
+                Return Me.cAS370Field
             End Get
             Set
-                Me.pPS363Field = value
-                Me.RaisePropertyChanged("PPS363")
+                Me.cAS370Field = value
+                Me.RaisePropertyChanged("CAS370")
             End Set
         End Property
         
@@ -871,22 +829,22 @@ Namespace wsStockOperations
      System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0"),  _
      System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced),  _
      System.ServiceModel.MessageContractAttribute(IsWrapped:=false)>  _
-    Partial Public Class PPS363
+    Partial Public Class Update_Averge_Costs
         
         <System.ServiceModel.MessageHeaderAttribute([Namespace]:="http://lawson.com/ws/credentials")>  _
         Public lws As wsStockOperations.lws
         
-        <System.ServiceModel.MessageBodyMemberAttribute(Name:="PPS363", [Namespace]:="http://schemas.lawson.com/StockOperations/PPS363", Order:=0)>  _
-        Public PPS3631 As wsStockOperations.PPS363Type
+        <System.ServiceModel.MessageBodyMemberAttribute(Name:="Update_Averge_Costs", [Namespace]:="http://schemas.lawson.com/StockOperations/Update_Averge_Costs", Order:=0)>  _
+        Public Update_Averge_Costs1 As wsStockOperations.Update_Averge_CostsType
         
         Public Sub New()
             MyBase.New
         End Sub
         
-        Public Sub New(ByVal lws As wsStockOperations.lws, ByVal PPS3631 As wsStockOperations.PPS363Type)
+        Public Sub New(ByVal lws As wsStockOperations.lws, ByVal Update_Averge_Costs1 As wsStockOperations.Update_Averge_CostsType)
             MyBase.New
             Me.lws = lws
-            Me.PPS3631 = PPS3631
+            Me.Update_Averge_Costs1 = Update_Averge_Costs1
         End Sub
     End Class
     
@@ -894,18 +852,18 @@ Namespace wsStockOperations
      System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0"),  _
      System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced),  _
      System.ServiceModel.MessageContractAttribute(IsWrapped:=false)>  _
-    Partial Public Class PPS363Response
+    Partial Public Class Update_Averge_CostsResponse
         
-        <System.ServiceModel.MessageBodyMemberAttribute(Name:="PPS363Response", [Namespace]:="http://schemas.lawson.com/StockOperations/PPS363", Order:=0)>  _
-        Public PPS363Response1 As wsStockOperations.PPS363ResponseType
+        <System.ServiceModel.MessageBodyMemberAttribute(Name:="Update_Averge_CostsResponse", [Namespace]:="http://schemas.lawson.com/StockOperations/Update_Averge_Costs", Order:=0)>  _
+        Public Update_Averge_CostsResponse1 As wsStockOperations.Update_Averge_CostsResponseType
         
         Public Sub New()
             MyBase.New
         End Sub
         
-        Public Sub New(ByVal PPS363Response1 As wsStockOperations.PPS363ResponseType)
+        Public Sub New(ByVal Update_Averge_CostsResponse1 As wsStockOperations.Update_Averge_CostsResponseType)
             MyBase.New
-            Me.PPS363Response1 = PPS363Response1
+            Me.Update_Averge_CostsResponse1 = Update_Averge_CostsResponse1
         End Sub
     End Class
     
@@ -1067,28 +1025,28 @@ Namespace wsStockOperations
         End Sub
         
         <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Function wsStockOperations_StockOperations_PPS363(ByVal request As wsStockOperations.PPS363) As wsStockOperations.PPS363Response Implements wsStockOperations.StockOperations.PPS363
-            Return MyBase.Channel.PPS363(request)
+        Function wsStockOperations_StockOperations_Update_Averge_Costs(ByVal request As wsStockOperations.Update_Averge_Costs) As wsStockOperations.Update_Averge_CostsResponse Implements wsStockOperations.StockOperations.Update_Averge_Costs
+            Return MyBase.Channel.Update_Averge_Costs(request)
         End Function
         
-        Public Function PPS363(ByVal lws As wsStockOperations.lws, ByVal PPS3631 As wsStockOperations.PPS363Type) As wsStockOperations.PPS363ResponseType
-            Dim inValue As wsStockOperations.PPS363 = New wsStockOperations.PPS363()
+        Public Function Update_Averge_Costs(ByVal lws As wsStockOperations.lws, ByVal Update_Averge_Costs1 As wsStockOperations.Update_Averge_CostsType) As wsStockOperations.Update_Averge_CostsResponseType
+            Dim inValue As wsStockOperations.Update_Averge_Costs = New wsStockOperations.Update_Averge_Costs()
             inValue.lws = lws
-            inValue.PPS3631 = PPS3631
-            Dim retVal As wsStockOperations.PPS363Response = CType(Me,wsStockOperations.StockOperations).PPS363(inValue)
-            Return retVal.PPS363Response1
+            inValue.Update_Averge_Costs1 = Update_Averge_Costs1
+            Dim retVal As wsStockOperations.Update_Averge_CostsResponse = CType(Me,wsStockOperations.StockOperations).Update_Averge_Costs(inValue)
+            Return retVal.Update_Averge_CostsResponse1
         End Function
         
         <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Function wsStockOperations_StockOperations_PPS363Async(ByVal request As wsStockOperations.PPS363) As System.Threading.Tasks.Task(Of wsStockOperations.PPS363Response) Implements wsStockOperations.StockOperations.PPS363Async
-            Return MyBase.Channel.PPS363Async(request)
+        Function wsStockOperations_StockOperations_Update_Averge_CostsAsync(ByVal request As wsStockOperations.Update_Averge_Costs) As System.Threading.Tasks.Task(Of wsStockOperations.Update_Averge_CostsResponse) Implements wsStockOperations.StockOperations.Update_Averge_CostsAsync
+            Return MyBase.Channel.Update_Averge_CostsAsync(request)
         End Function
         
-        Public Function PPS363Async(ByVal lws As wsStockOperations.lws, ByVal PPS3631 As wsStockOperations.PPS363Type) As System.Threading.Tasks.Task(Of wsStockOperations.PPS363Response)
-            Dim inValue As wsStockOperations.PPS363 = New wsStockOperations.PPS363()
+        Public Function Update_Averge_CostsAsync(ByVal lws As wsStockOperations.lws, ByVal Update_Averge_Costs1 As wsStockOperations.Update_Averge_CostsType) As System.Threading.Tasks.Task(Of wsStockOperations.Update_Averge_CostsResponse)
+            Dim inValue As wsStockOperations.Update_Averge_Costs = New wsStockOperations.Update_Averge_Costs()
             inValue.lws = lws
-            inValue.PPS3631 = PPS3631
-            Return CType(Me,wsStockOperations.StockOperations).PPS363Async(inValue)
+            inValue.Update_Averge_Costs1 = Update_Averge_Costs1
+            Return CType(Me,wsStockOperations.StockOperations).Update_Averge_CostsAsync(inValue)
         End Function
         
         <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _

@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://m3be.gunnersens.com.au:21007/mws-ws/services/StockOperations?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://m3be.gunnersens.com.au:20007/mws-ws/services/StockOperations?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="StockOperationsService.wsdl" MetadataType="Wsdl" ID="0700d1f7-503a-43e6-9736-2a7ec5eb8d4a" SourceId="1" SourceUrl="http://m3be.gunnersens.com.au:21007/mws-ws/services/StockOperations?wsdl" />
+    <MetadataFile FileName="StockOperationsService1.wsdl" MetadataType="Wsdl" ID="09cadf03-7eaa-455b-a51f-f6a45320854c" SourceId="1" SourceUrl="http://m3be.gunnersens.com.au:20007/mws-ws/services/StockOperations?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

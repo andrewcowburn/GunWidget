@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.lawson.com/StockOperations/UpdateCosts" xmlns:tns="http://schemas.lawson.com/StockOperations" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns5="http://lawson.com/ws/transports/grid" xmlns:lws="http://lawson.com/ws/credentials" xmlns:ns4="http://schemas.lawson.com/StockOperations/DisplayCosts" xmlns:ns1="http://schemas.lawson.com/StockOperations/PPS363" xmlns:ns3="http://schemas.lawson.com/StockOperations/Catchweight" name="StockOperationsService" targetNamespace="http://schemas.lawson.com/StockOperations" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns:pps363="http://schemas.lawson.com/StockOperations/PPS363" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/StockOperations/PPS363">
+      <xsd:annotation>
+        <xsd:documentation>Program: PPS363</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="PPS363" type="pps363:PPS363Type" />
+      <xsd:complexType name="PPS363Type">
+        <xsd:sequence>
+          <xsd:element name="PPS363" type="pps363:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="PackageNumber">
+            <xsd:annotation>
+              <xsd:documentation>Package number
+The field indicates the identity of a package.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="ItemNumber">
+            <xsd:annotation>
+              <xsd:documentation>Item number
+The field indicates the item number (for Maintenance, the item number or equipment number), which is a unique ID for an individual item.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="15" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="OrderLine" type="xsd:integer">
+            <xsd:annotation>
+              <xsd:documentation>Order line
+The field indicates the order line number.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="OrderNumber">
+            <xsd:annotation>
+              <xsd:documentation>Order number
+The field indicates an order number.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="LineSuffix" type="xsd:integer">
+            <xsd:annotation>
+              <xsd:documentation>Line suffix
+The field indicates a sequence number within an order line.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="ReceivedQuantity">
+            <xsd:annotation>
+              <xsd:documentation>Received quantity
+The field indicates the received quantity per reporting occasion expressed in the purchase U/M that applies to the purchase order line.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="16" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="PPS363Response" type="pps363:PPS363ResponseType" />
+      <xsd:complexType name="PPS363ResponseType">
+        <xsd:sequence>
+          <xsd:element name="PPS363" type="pps363:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:updatecosts="http://schemas.lawson.com/StockOperations/UpdateCosts" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/StockOperations/UpdateCosts">
+      <xsd:annotation>
+        <xsd:documentation>Program: PCS265</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="UpdateCosts" type="updatecosts:UpdateCostsType" />
+      <xsd:complexType name="UpdateCostsType">
+        <xsd:sequence>
+          <xsd:element name="PCS265" type="updatecosts:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="ItemNumber">
+            <xsd:annotation>
+              <xsd:documentation>Item number
+The field indicates the item number (for Maintenance, the item number or equipment number), which is a unique ID for an individual item.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="15" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Facility">
+            <xsd:annotation>
+              <xsd:documentation>Facility
+The field indicates the facility used.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="CostingSum1">
+            <xsd:annotation>
+              <xsd:documentation>Costing sum 1
+The field indicates a costing sum in the costing model. Its purpose is to display a total for one or several costing components.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="13" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="LotNumber">
+            <xsd:annotation>
+              <xsd:documentation>Lot number
+The field indicates the lot number, which is an ID of a manufactured or purchased quantity of an item. All units included in a lot have the same characteristics.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UpdateCostsResponse" type="updatecosts:UpdateCostsResponseType" />
+      <xsd:complexType name="UpdateCostsResponseType">
+        <xsd:sequence>
+          <xsd:element name="PCS265" type="updatecosts:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:catchweight="http://schemas.lawson.com/StockOperations/Catchweight" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/StockOperations/Catchweight">
+      <xsd:annotation>
+        <xsd:documentation>Program: MMS360</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="Catchweight" type="catchweight:CatchweightType" />
+      <xsd:complexType name="CatchweightType">
+        <xsd:sequence>
+          <xsd:element name="MMS360" type="catchweight:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="ItemNumber">
+            <xsd:annotation>
+              <xsd:documentation>Item number
+The field indicates the item number (for Maintenance, the item number or equipment number), which is a unique ID for an individual item.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="15" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Warehouse">
+            <xsd:annotation>
+              <xsd:documentation>Warehouse
+The field indicates the warehouse ID.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="LotNumber">
+            <xsd:annotation>
+              <xsd:documentation>Lot number
+The field indicates the lot number, which is an ID of a manufactured or purchased quantity of an item. All units included in a lot have the same characteristics.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Location">
+            <xsd:annotation>
+              <xsd:documentation>Location
+The field indicates the location. A location is defined per warehouse and is thus below a warehouse in a tree structure.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="10" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="ReceivingNumber" type="xsd:integer">
+            <xsd:annotation>
+              <xsd:documentation>Receiving number
+The field indicates the receiving number which is assigned automatically for each item received in goods receiving.</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="Container" nillable="true">
+            <xsd:annotation>
+              <xsd:documentation>Container
+The field indicates the object on which deliveries and receipts are loaded.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="CatchWeight">
+            <xsd:annotation>
+              <xsd:documentation>Catch weight
+The field indicates the catch weight of the lot.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="11" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="CatchweightResponse" type="catchweight:CatchweightResponseType" />
+      <xsd:complexType name="CatchweightResponseType">
+        <xsd:sequence>
+          <xsd:element name="MMS360" type="catchweight:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence />
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema xmlns:displaycosts="http://schemas.lawson.com/StockOperations/DisplayCosts" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.lawson.com/StockOperations/DisplayCosts">
+      <xsd:annotation>
+        <xsd:documentation>Program: PCS265</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="DisplayCosts" type="displaycosts:DisplayCostsType" />
+      <xsd:complexType name="DisplayCostsType">
+        <xsd:sequence>
+          <xsd:element name="PCS265" type="displaycosts:ct_0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_0">
+        <xsd:sequence>
+          <xsd:element name="LotNumber">
+            <xsd:annotation>
+              <xsd:documentation>Lot number
+The field indicates the lot number, which is an ID of a manufactured or purchased quantity of an item. All units included in a lot have the same characteristics.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="Facility">
+            <xsd:annotation>
+              <xsd:documentation>Facility
+The field indicates the facility used.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="3" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="ItemNumber">
+            <xsd:annotation>
+              <xsd:documentation>Item number
+The field indicates the item number (for Maintenance, the item number or equipment number), which is a unique ID for an individual item.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="15" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DisplayCostsResponse" type="displaycosts:DisplayCostsResponseType" />
+      <xsd:complexType name="DisplayCostsResponseType">
+        <xsd:sequence>
+          <xsd:element name="PCS265" type="displaycosts:ct_1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ct_1">
+        <xsd:sequence>
+          <xsd:element name="CostingSumT1">
+            <xsd:annotation>
+              <xsd:documentation>Costing sum 1
+The field indicates a costing sum in the costing model. Its purpose is to display a total for one or several costing components.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="15" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element name="CostingSumW1">
+            <xsd:annotation>
+              <xsd:documentation>Costing sum 1
+The field indicates a costing sum in the costing model. Its purpose is to display a total for one or several costing components.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="13" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://lawson.com/ws/credentials">
+      <xsd:element name="lws">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="user" type="xsd:string" />
+            <xsd:element name="password" type="xsd:string" />
+            <xsd:element minOccurs="0" name="company" type="xsd:integer" />
+            <xsd:element minOccurs="0" name="division" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="PPS363Response">
+    <wsdl:part name="PPS363Response" element="ns1:PPS363Response" />
+  </wsdl:message>
+  <wsdl:message name="UpdateCosts">
+    <wsdl:part name="UpdateCosts" element="ns2:UpdateCosts" />
+  </wsdl:message>
+  <wsdl:message name="Catchweight">
+    <wsdl:part name="Catchweight" element="ns3:Catchweight" />
+  </wsdl:message>
+  <wsdl:message name="LwsHeader001">
+    <wsdl:part name="LwsHeader" element="lws:lws" />
+  </wsdl:message>
+  <wsdl:message name="CatchweightResponse">
+    <wsdl:part name="CatchweightResponse" element="ns3:CatchweightResponse" />
+  </wsdl:message>
+  <wsdl:message name="PPS363">
+    <wsdl:part name="PPS363" element="ns1:PPS363" />
+  </wsdl:message>
+  <wsdl:message name="UpdateCostsResponse">
+    <wsdl:part name="UpdateCostsResponse" element="ns2:UpdateCostsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DisplayCostsResponse">
+    <wsdl:part name="DisplayCostsResponse" element="ns4:DisplayCostsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DisplayCosts">
+    <wsdl:part name="DisplayCosts" element="ns4:DisplayCosts" />
+  </wsdl:message>
+  <wsdl:portType name="StockOperations">
+    <wsdl:operation name="PPS363">
+      <wsdl:input name="PPS363" message="tns:PPS363" />
+      <wsdl:output name="PPS363Response" message="tns:PPS363Response" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCosts">
+      <wsdl:input name="UpdateCosts" message="tns:UpdateCosts" />
+      <wsdl:output name="UpdateCostsResponse" message="tns:UpdateCostsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="Catchweight">
+      <wsdl:input name="Catchweight" message="tns:Catchweight" />
+      <wsdl:output name="CatchweightResponse" message="tns:CatchweightResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DisplayCosts">
+      <wsdl:input name="DisplayCosts" message="tns:DisplayCosts" />
+      <wsdl:output name="DisplayCostsResponse" message="tns:DisplayCostsResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="StockOperationsServiceSoapBinding" type="tns:StockOperations">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="PPS363">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="PPS363">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="PPS363Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCosts">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="UpdateCosts">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="UpdateCostsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Catchweight">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="Catchweight">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="CatchweightResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DisplayCosts">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="DisplayCosts">
+        <soap:body use="literal" />
+        <soap:header message="tns:LwsHeader001" part="LwsHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output name="DisplayCostsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="StockOperationsService">
+    <wsdl:port name="StockOperationsPort" binding="tns:StockOperationsServiceSoapBinding">
+      <soap:address location="http://m3be.gunnersens.com.au:21007/mws-ws/services/StockOperations" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
